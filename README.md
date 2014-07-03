@@ -1,4 +1,3 @@
-Samples-2014
-============
+## Samples 2014
 
 For samples.
