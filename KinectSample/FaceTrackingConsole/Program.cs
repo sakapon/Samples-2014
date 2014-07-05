@@ -10,6 +10,14 @@ namespace FaceTrackingConsole
     {
         static void Main(string[] args)
         {
+            var tracker = new SkeletonFaceTracker();
+            tracker.JawLowerUpdated += v =>
+            {
+                Console.WriteLine(v);
+            };
+
+            Console.WriteLine("Press [Enter] key to exit.");
+            Console.ReadLine();
         }
     }
 }
