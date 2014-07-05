@@ -34,7 +34,7 @@ namespace FaceTrackingConsole
             };
         }
 
-        public event Action<ColorImageFrame, DepthImageFrame, SkeletonFrame> FaceTrackingFrameUpdated = (cf, df, sf) => { };
+        public event Action<KinectSensor, ColorImageFrame, DepthImageFrame, SkeletonFrame> AllFramesUpdated = (ks, cf, df, sf) => { };
 
         public KinectSensorChooser SensorChooser { get; private set; }
 
@@ -127,7 +127,7 @@ namespace FaceTrackingConsole
             {
                 if (cf == null || df == null || sf == null) return;
 
-                FaceTrackingFrameUpdated(cf, df, sf);
+                AllFramesUpdated((KinectSensor)sender, cf, df, sf);
             }
         }
     }

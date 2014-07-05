@@ -10,20 +10,20 @@ namespace FaceTrackingConsole
     {
         public SkeletonFaceTracker()
         {
-            KinectContext.Current.FaceTrackingFrameUpdated += Context_FaceTrackingFrameUpdated;
+            KinectContext.Current.AllFramesUpdated += Context_AllFramesUpdated;
         }
 
-        public event Action<float> JawLowerUpdated = v => { };
+        public event Action<bool> IsSkeletonTrackedUpdated = b => { };
+        public event Action<float?> JawLowerUpdated = v => { };
 
+        KinectSensor sensor;
         byte[] colorImage;
         short[] depthImage;
         Skeleton[] skeletonData;
 
-        int skeletonId = -1;
-        FaceTracker faceTracker;
-
-        void Context_FaceTrackingFrameUpdated(ColorImageFrame cf, DepthImageFrame df, SkeletonFrame sf)
+        void Context_AllFramesUpdated(KinectSensor sensor, ColorImageFrame cf, DepthImageFrame df, SkeletonFrame sf)
         {
+            this.sensor = sensor;
             if (colorImage == null)
             {
                 colorImage = new byte[cf.PixelDataLength];
@@ -35,10 +35,20 @@ namespace FaceTrackingConsole
             df.CopyPixelDataTo(depthImage);
             sf.CopySkeletonDataTo(skeletonData);
 
+            TrackFace();
+        }
+
+        int skeletonId = -1;
+        FaceTracker faceTracker;
+
+        void TrackFace()
+        {
             var skeleton = skeletonData
                 .Where(s => s.TrackingState != SkeletonTrackingState.NotTracked)
                 .OrderBy(s => s.Position.Z)
                 .FirstOrDefault();
+
+            IsSkeletonTrackedUpdated(skeleton != null);
 
             if (skeleton == null)
             {
@@ -48,29 +58,41 @@ namespace FaceTrackingConsole
                     faceTracker.Dispose();
                     faceTracker = null;
                 }
+
+                JawLowerUpdated(null);
                 return;
             }
 
-            var skeletonId_old = skeletonId;
-            skeletonId = skeleton.TrackingId;
-
-            if (skeletonId_old != skeletonId)
+            if (skeletonId != skeleton.TrackingId)
             {
                 try
                 {
-                    faceTracker = new FaceTracker(KinectContext.Current.SensorChooser.Kinect);
+                    if (faceTracker != null)
+                    {
+                        faceTracker.Dispose();
+                    }
+                    faceTracker = new FaceTracker(sensor);
                 }
                 catch (InvalidOperationException)
                 {
                     return;
                 }
             }
+            skeletonId = skeleton.TrackingId;
 
-            if (skeleton.TrackingState != SkeletonTrackingState.Tracked) return;
+            if (skeleton.TrackingState != SkeletonTrackingState.Tracked)
+            {
+                JawLowerUpdated(null);
+                return;
+            }
 
             // MEMO: FaceTrackFrame オブジェクトの Dispose メソッドを呼び出すと、以降の処理が正常に続かなくなります。
-            var faceFrame = faceTracker.Track(cf.Format, colorImage, df.Format, depthImage, skeleton);
-            if (!faceFrame.TrackSuccessful) return;
+            var faceFrame = faceTracker.Track(sensor.ColorStream.Format, colorImage, sensor.DepthStream.Format, depthImage, skeleton);
+            if (!faceFrame.TrackSuccessful)
+            {
+                JawLowerUpdated(null);
+                return;
+            }
 
             var animationUnits = faceFrame.GetAnimationUnitCoefficients();
             JawLowerUpdated(animationUnits[AnimationUnit.JawLower]);
