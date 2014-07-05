@@ -39,9 +39,15 @@ namespace FaceTrackingConsole
                 .Where(s => s.TrackingState != SkeletonTrackingState.NotTracked)
                 .OrderBy(s => s.Position.Z)
                 .FirstOrDefault();
+
             if (skeleton == null)
             {
                 skeletonId = -1;
+                if (faceTracker != null)
+                {
+                    faceTracker.Dispose();
+                    faceTracker = null;
+                }
                 return;
             }
 
@@ -52,10 +58,6 @@ namespace FaceTrackingConsole
             {
                 try
                 {
-                    if (faceTracker != null)
-                    {
-                        faceTracker.Dispose();
-                    }
                     faceTracker = new FaceTracker(KinectContext.Current.SensorChooser.Kinect);
                 }
                 catch (InvalidOperationException)
@@ -66,19 +68,12 @@ namespace FaceTrackingConsole
 
             if (skeleton.TrackingState != SkeletonTrackingState.Tracked) return;
 
-            using (var faceFrame = faceTracker.Track(cf.Format, colorImage, df.Format, depthImage, skeleton))
-            {
-                try
-                {
-                    if (!faceFrame.TrackSuccessful) return;
+            // MEMO: FaceTrackFrame オブジェクトの Dispose メソッドを呼び出すと、以降の処理が正常に続かなくなります。
+            var faceFrame = faceTracker.Track(cf.Format, colorImage, df.Format, depthImage, skeleton);
+            if (!faceFrame.TrackSuccessful) return;
 
-                    var animationUnits = faceFrame.GetAnimationUnitCoefficients();
-                    JawLowerUpdated(animationUnits[AnimationUnit.JawLower]);
-                }
-                catch (Exception)
-                {
-                }
-            }
+            var animationUnits = faceFrame.GetAnimationUnitCoefficients();
+            JawLowerUpdated(animationUnits[AnimationUnit.JawLower]);
         }
     }
 }
