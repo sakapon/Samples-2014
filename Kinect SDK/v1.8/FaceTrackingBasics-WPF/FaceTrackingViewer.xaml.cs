@@ -9,11 +9,13 @@ namespace FaceTrackingBasics
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
     using Microsoft.Kinect;
     using Microsoft.Kinect.Toolkit.FaceTracking;
+    using Ventuz.OSC;
 
     using Point = System.Windows.Point;
 
@@ -24,9 +26,9 @@ namespace FaceTrackingBasics
     public partial class FaceTrackingViewer : UserControl, IDisposable
     {
         public static readonly DependencyProperty KinectProperty = DependencyProperty.Register(
-            "Kinect", 
-            typeof(KinectSensor), 
-            typeof(FaceTrackingViewer), 
+            "Kinect",
+            typeof(KinectSensor),
+            typeof(FaceTrackingViewer),
             new PropertyMetadata(
                 null, (o, args) => ((FaceTrackingViewer)o).OnSensorChanged((KinectSensor)args.OldValue, (KinectSensor)args.NewValue)));
 
@@ -137,7 +139,7 @@ namespace FaceTrackingBasics
                 {
                     this.colorImage = new byte[colorImageFrame.PixelDataLength];
                 }
-                
+
                 // Get the skeleton information
                 if (this.skeletonData == null || this.skeletonData.Length != skeletonFrame.SkeletonArrayLength)
                 {
@@ -348,6 +350,15 @@ namespace FaceTrackingBasics
                         }
 
                         this.facePoints = frame.GetProjected3DShape();
+
+                        // Send face skeleton data by OSC.
+                        SendSkeletonData(frame);
+
+                        // Send expression data by OSC.
+                        SendAnimationUnits(frame);
+
+                        // Send the other face data by OSC.
+                        SendOtherFaceData(frame);
                     }
                 }
             }
@@ -357,6 +368,36 @@ namespace FaceTrackingBasics
                 public Point P1;
                 public Point P2;
                 public Point P3;
+            }
+
+            //const string TargetAddress = "127.0.0.1";
+            const string TargetAddress = "10.0.0.1";
+            const int TargetPort = 4444;
+            UdpWriter writer = new UdpWriter(TargetAddress, TargetPort);
+
+            void SendSkeletonData(FaceTrackFrame frame)
+            {
+                var shape = frame.Get3DShape();
+                var points = shape.SelectMany(s => new object[] { s.X, s.Y, s.Z }).ToArray();
+                var message = new OscBundle(DateTime.Now, new OscElement("/face/skeleton", points));
+                writer.Send(message);
+            }
+
+            void SendAnimationUnits(FaceTrackFrame frame)
+            {
+                var animationUnits = frame.GetAnimationUnitCoefficients();
+                var elements = Enum.GetValues(typeof(AnimationUnit))
+                    .Cast<AnimationUnit>()
+                    .Select(u => new OscElement("/face/" + u.ToString().ToLowerInvariant(), animationUnits[u]))
+                    .ToArray();
+                var message = new OscBundle(DateTime.Now, elements);
+                writer.Send(message);
+            }
+
+            void SendOtherFaceData(FaceTrackFrame frame)
+            {
+                var message = new OscBundle(DateTime.Now, new OscElement("/face/rotation", frame.Rotation.X, frame.Rotation.Y, frame.Rotation.Z));
+                writer.Send(message);
             }
         }
     }
