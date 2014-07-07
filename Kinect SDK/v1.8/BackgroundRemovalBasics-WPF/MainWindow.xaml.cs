@@ -7,8 +7,10 @@
 namespace Microsoft.Samples.Kinect.BackgroundRemovalBasics
 {
     using System;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
@@ -72,6 +74,30 @@ namespace Microsoft.Samples.Kinect.BackgroundRemovalBasics
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += this.SensorChooserOnKinectChanged;
             this.sensorChooser.Start();
+
+            var isMouseDown = false;
+            var point = default(Point);
+            MouseLeftButtonDown += (o, e) =>
+            {
+                isMouseDown = true;
+                point = ScreenManager.GetCursorPosition();
+            };
+            MouseMove += (o, e) =>
+            {
+                if (!isMouseDown) return;
+
+                var point_old = point;
+                point = ScreenManager.GetCursorPosition();
+
+                var v = point - point_old;
+                Left += v.X;
+                Top += v.Y;
+            };
+            MouseLeftButtonUp += (o, e) =>
+            {
+                isMouseDown = false;
+                point = default(Point);
+            };
         }
 
         /// <summary>
@@ -320,6 +346,35 @@ namespace Microsoft.Samples.Kinect.BackgroundRemovalBasics
                     // E.g.: sensor might be abruptly unplugged.
                 }
             }
+        }
+    }
+
+    public static class ScreenManager
+    {
+        [DllImport("user32.dll")]
+        static extern bool GetCursorPos(ref POINT p);
+
+        [DllImport("user32.dll")]
+        static extern bool SetCursorPos(int x, int y);
+
+        public static Point GetCursorPosition()
+        {
+            var p = new POINT();
+            GetCursorPos(ref p);
+            return new Point(p.x, p.y);
+        }
+
+        public static void SetCursorPosition(Point p)
+        {
+            SetCursorPos((int)p.X, (int)p.Y);
+        }
+
+        [DebuggerDisplay(@"\{{x}, {y}\}")]
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int x;
+            public int y;
         }
     }
 }
