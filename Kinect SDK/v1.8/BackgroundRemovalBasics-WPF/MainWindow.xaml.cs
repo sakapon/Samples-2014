@@ -70,7 +70,6 @@ namespace Microsoft.Samples.Kinect.BackgroundRemovalBasics
 
             // initialize the sensor chooser and UI
             this.sensorChooser = new KinectSensorChooser();
-            this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
             this.sensorChooser.KinectChanged += this.SensorChooserOnKinectChanged;
             this.sensorChooser.Start();
         }
@@ -184,7 +183,7 @@ namespace Microsoft.Samples.Kinect.BackgroundRemovalBasics
             {
                 if (backgroundRemovedFrame != null)
                 {
-                    if (null == this.foregroundBitmap || this.foregroundBitmap.PixelWidth != backgroundRemovedFrame.Width 
+                    if (null == this.foregroundBitmap || this.foregroundBitmap.PixelWidth != backgroundRemovedFrame.Width
                         || this.foregroundBitmap.PixelHeight != backgroundRemovedFrame.Height)
                     {
                         this.foregroundBitmap = new WriteableBitmap(backgroundRemovedFrame.Width, backgroundRemovedFrame.Height, 96.0, 96.0, PixelFormats.Bgra32, null);
@@ -303,9 +302,7 @@ namespace Microsoft.Samples.Kinect.BackgroundRemovalBasics
 
                     try
                     {
-                        args.NewSensor.DepthStream.Range = this.checkBoxNearMode.IsChecked.GetValueOrDefault()
-                                                    ? DepthRange.Near
-                                                    : DepthRange.Default;
+                        args.NewSensor.DepthStream.Range = DepthRange.Near;
                         args.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
                     }
                     catch (InvalidOperationException)
@@ -315,99 +312,13 @@ namespace Microsoft.Samples.Kinect.BackgroundRemovalBasics
                         args.NewSensor.SkeletonStream.EnableTrackingInNearRange = false;
                     }
 
-                    this.statusBarText.Text = Properties.Resources.ReadyForScreenshot;
+                    args.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
                 }
                 catch (InvalidOperationException)
                 {
                     // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
                     // E.g.: sensor might be abruptly unplugged.
                 }
-            }
-        }
-
-
-        /// <summary>
-        /// Handles the user clicking on the screenshot button
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void ButtonScreenshotClick(object sender, RoutedEventArgs e)
-        {
-            if (null == this.sensorChooser || null == this.sensorChooser.Kinect)
-            {
-                this.statusBarText.Text = Properties.Resources.ConnectDeviceFirst;
-                return;
-            }
-
-            int colorWidth = this.foregroundBitmap.PixelWidth;
-            int colorHeight = this.foregroundBitmap.PixelHeight;
-
-            // create a render target that we'll render our controls to
-            var renderBitmap = new RenderTargetBitmap(colorWidth, colorHeight, 96.0, 96.0, PixelFormats.Pbgra32);
-
-            var dv = new DrawingVisual();
-            using (var dc = dv.RenderOpen())
-            {
-                // render the backdrop
-                var backdropBrush = new VisualBrush(Backdrop);
-                dc.DrawRectangle(backdropBrush, null, new Rect(new Point(), new Size(colorWidth, colorHeight)));
-
-                // render the color image masked out by players
-                var colorBrush = new VisualBrush(MaskedColor);
-                dc.DrawRectangle(colorBrush, null, new Rect(new Point(), new Size(colorWidth, colorHeight)));
-            }
-
-            renderBitmap.Render(dv);
-    
-            // create a png bitmap encoder which knows how to save a .png file
-            BitmapEncoder encoder = new PngBitmapEncoder();
-
-            // create frame from the writable bitmap and add to encoder
-            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-
-            var time = DateTime.Now.ToString("hh'-'mm'-'ss", CultureInfo.CurrentUICulture.DateTimeFormat);
-
-            var myPhotos = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-
-            var path = Path.Combine(myPhotos, "KinectSnapshot-" + time + ".png");
-
-            // write the new file to disk
-            try
-            {
-                using (var fs = new FileStream(path, FileMode.Create))
-                {
-                    encoder.Save(fs);
-                }
-
-                this.statusBarText.Text = string.Format(CultureInfo.InvariantCulture, Properties.Resources.ScreenshotWriteSuccess, path);
-            }
-            catch (IOException)
-            {
-                this.statusBarText.Text = string.Format(CultureInfo.InvariantCulture, Properties.Resources.ScreenshotWriteFailed, path);
-            }
-        }
-        
-        /// <summary>
-        /// Handles the checking or unchecking of the near mode combo box
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void CheckBoxNearModeChanged(object sender, RoutedEventArgs e)
-        {
-            if (null == this.sensorChooser || null == this.sensorChooser.Kinect)
-            {
-                return;
-            }
-
-            // will not function on non-Kinect for Windows devices
-            try
-            {
-                this.sensorChooser.Kinect.DepthStream.Range = this.checkBoxNearMode.IsChecked.GetValueOrDefault()
-                                                    ? DepthRange.Near
-                                                    : DepthRange.Default;
-            }
-            catch (InvalidOperationException)
-            {
             }
         }
     }
