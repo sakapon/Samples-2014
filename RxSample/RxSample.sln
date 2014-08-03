@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseRxWpf", "MouseRxWpf\MouseRxWpf.csproj", "{D1EF5A44-A3D3-439F-8D40-719D5822DB34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseOldWpf", "MouseOldWpf\MouseOldWpf.csproj", "{7C46EAA3-D9A8-4BC8-AB4A-28196140316B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1EF5A44-A3D3-439F-8D40-719D5822DB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1EF5A44-A3D3-439F-8D40-719D5822DB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1EF5A44-A3D3-439F-8D40-719D5822DB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1EF5A44-A3D3-439F-8D40-719D5822DB34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C46EAA3-D9A8-4BC8-AB4A-28196140316B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C46EAA3-D9A8-4BC8-AB4A-28196140316B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C46EAA3-D9A8-4BC8-AB4A-28196140316B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C46EAA3-D9A8-4BC8-AB4A-28196140316B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
