@@ -39,13 +39,14 @@ namespace MouseRxWpf
             var orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
             var zoneAngleRange = 2 * π / orientationSymbols.Length;
 
-            var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(this, "MouseDown");
-            var mouseUp = Observable.FromEventPattern<MouseButtonEventArgs>(this, "MouseUp");
-            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(this, "MouseLeave");
+            // Replace events with IObservable objects.
+            var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(this, "MouseDown").Select(e => e.EventArgs);
+            var mouseUp = Observable.FromEventPattern<MouseButtonEventArgs>(this, "MouseUp").Select(e => e.EventArgs);
+            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(this, "MouseLeave").Select(e => e.EventArgs);
 
-            mouseDown
-                .Select(e => e.EventArgs.GetPosition(this))
-                .SelectMany(p => mouseUp.Take(1), (p, e) => new { Start = p, End = e.EventArgs.GetPosition(this) })
+            mouseDown.Select(e => e.GetPosition(this))
+                .SelectMany(p => mouseUp.Select(e => e.GetPosition(this)).Take(1),
+                    (p1, p2) => new { Start = p1, End = p2 })
                 .Do(o => Debug.WriteLine(o))
                 .Select(o => o.End - o.Start)
                 .Where(d => d.Length >= 100)
