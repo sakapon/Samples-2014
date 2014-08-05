@@ -35,7 +35,7 @@ namespace MouseRxWpf
         {
             InitializeComponent();
 
-            const double π = Math.PI;
+            var π = Math.PI;
             var orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
             var zoneAngleRange = 2 * π / orientationSymbols.Length;
 

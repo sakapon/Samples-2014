@@ -1,8 +1,8 @@
-﻿<Window x:Class="MouseOldWpf.MainWindow"
+﻿<Window x:Name="window" x:Class="MouseOldWpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="600" Width="600">
     <Grid>
-        
+    	<TextBlock Text="{Binding Orientation, ElementName=window}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="200"/>
     </Grid>
 </Window>

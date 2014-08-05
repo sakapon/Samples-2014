@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,41 @@ namespace MouseOldWpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register("Orientation", typeof(string), typeof(MainWindow), new PropertyMetadata(null));
+
+        public string Orientation
+        {
+            get { return (string)GetValue(OrientationProperty); }
+            private set { SetValue(OrientationProperty, value); }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            var π = Math.PI;
+            var orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
+            var zoneAngleRange = 2 * π / orientationSymbols.Length;
+
+            var start = default(Point);
+
+            MouseDown += (o, e) =>
+            {
+                start = e.GetPosition(this);
+            };
+            MouseUp += (o, e) =>
+            {
+                var end = e.GetPosition(this);
+                Debug.WriteLine(new { Start = start, End = end });
+
+                var d = end - start;
+                if (d.Length < 100) return;
+
+                var angle = 2 * π + Math.Atan2(d.Y, d.X);
+                var zone = (int)Math.Round(angle / zoneAngleRange) % orientationSymbols.Length;
+                Orientation = orientationSymbols[zone];
+            };
         }
     }
 }
