@@ -38,7 +38,7 @@ namespace MouseOldWpf
             var orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
             var zoneAngleRange = 2 * π / orientationSymbols.Length;
 
-            var start = default(Point);
+            var start = default(Point?);
 
             MouseDown += (o, e) =>
             {
@@ -46,15 +46,22 @@ namespace MouseOldWpf
             };
             MouseUp += (o, e) =>
             {
-                var end = e.GetPosition(this);
-                Debug.WriteLine(new { Start = start, End = end });
+                if (!start.HasValue) return;
 
-                var d = end - start;
+                var end = e.GetPosition(this);
+                var _ = new { Start = start.Value, End = end };
+                Debug.WriteLine(_);
+
+                var d = _.End - _.Start;
                 if (d.Length < 100) return;
 
                 var angle = 2 * π + Math.Atan2(d.Y, d.X);
                 var zone = (int)Math.Round(angle / zoneAngleRange) % orientationSymbols.Length;
                 Orientation = orientationSymbols[zone];
+            };
+            MouseLeave += (o, e) =>
+            {
+                start = null;
             };
         }
     }
