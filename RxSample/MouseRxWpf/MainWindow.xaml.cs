@@ -45,8 +45,11 @@ namespace MouseRxWpf
             var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(this, "MouseLeave").Select(e => e.EventArgs);
 
             mouseDown.Select(e => e.GetPosition(this))
-                .SelectMany(p => mouseUp.Select(e => e.GetPosition(this)).Take(1),
-                    (p1, p2) => new { Start = p1, End = p2 })
+                .SelectMany(p1 => mouseUp.Merge(mouseLeave.Select(e => default(MouseButtonEventArgs)))
+                    .Take(1)
+                    .Where(e => e != null)
+                    .Select(e => e.GetPosition(this))
+                    .Select(p2 => new { Start = p1, End = p2 }))
                 .Do(o => Debug.WriteLine(o))
                 .Select(o => o.End - o.Start)
                 .Where(d => d.Length >= 100)
