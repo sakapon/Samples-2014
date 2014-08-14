@@ -16,7 +16,7 @@ namespace MathConsole
             Console.WriteLine(Divide(1, 0)); // Compilation Error
         }
 
-        static double Divide(double d, double divisor) // where divisor != 0
+        static double Divide(double d, double divisor) where divisor != 0
         {
             return d / divisor;
         }
@@ -26,7 +26,7 @@ namespace MathConsole
     {
         int i;
 
-        public NaturalNumber(int i) // where i > 0
+        public NaturalNumber(int i) where i > 0
         {
             this.i = i;
         }
