@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortConsole", "SortConsole\SortConsole.csproj", "{EB2AE32C-436D-40C3-B0C1-C188C0BA3D2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathConsole", "MathConsole\MathConsole.csproj", "{E8124D3B-F17D-48BF-AD39-CAA95A06235B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{EB2AE32C-436D-40C3-B0C1-C188C0BA3D2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB2AE32C-436D-40C3-B0C1-C188C0BA3D2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB2AE32C-436D-40C3-B0C1-C188C0BA3D2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8124D3B-F17D-48BF-AD39-CAA95A06235B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8124D3B-F17D-48BF-AD39-CAA95A06235B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8124D3B-F17D-48BF-AD39-CAA95A06235B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8124D3B-F17D-48BF-AD39-CAA95A06235B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
