@@ -1,4 +1,7 @@
-﻿using System;
+﻿/* 
+ * このプログラムには、架空の機能が含まれます。
+ */
+using System;
 
 namespace SortConsole
 {
@@ -12,7 +15,7 @@ namespace SortConsole
         }
 
         // Point: 戻り値に対する高度な制約。
-        static OrderedTwoValues Sort(TwoValues v) // where Sort(v).SetEquals(v)
+        static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
         {
             // Point: 変数の大小関係などの高度なコンテキスト。
             // コンパイルが成功すれば、このメソッドの実装も成功です。
@@ -49,7 +52,7 @@ namespace SortConsole
     {
         // Point: 引数に対する高度な制約。
         public OrderedTwoValues(int x, int y)
-            : base(x, y) // where x <= y
+            : base(x, y) where x <= y
         {
         }
     }
