@@ -9,10 +9,16 @@ namespace MathConsole
     {
         static void Main(string[] args)
         {
-            NaturalNumber n = 1; // OK
-            NaturalNumber m = -1; // Error
+            NaturalNumber n = 3; // OK
+            NaturalNumber m = -1; // Compilation Error
 
-            Console.WriteLine(n + m);
+            Console.WriteLine(Divide(1, n)); // OK
+            Console.WriteLine(Divide(1, 0)); // Compilation Error
+        }
+
+        static double Divide(double d, double divisor) // where divisor != 0
+        {
+            return d / divisor;
         }
     }
 
@@ -23,6 +29,11 @@ namespace MathConsole
         public NaturalNumber(int i) // where i > 0
         {
             this.i = i;
+        }
+
+        public override string ToString()
+        {
+            return i.ToString();
         }
 
         public static implicit operator int(NaturalNumber n)
