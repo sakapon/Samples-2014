@@ -1,4 +1,4 @@
-﻿## C# で形式的検証
+﻿## もし C# で形式的検証ができたら
 
 C# では、コンパイル時に静的にコードをチェックし、警告やエラーを通知してくれます。
 例えば、次のようなものです。
@@ -14,17 +14,76 @@ C# では、コンパイル時に静的にコードをチェックし、警告�
 実装のお題として「与えられた 2 つの整数を昇順に並べ替えるメソッド」という単純なものを設定し、
 どうすればバグのないプログラミングができるかを考えます。
 
-まず、並べ替えを満たす条件は次の通りです。
+まず、並べ替えのメソッドが満たすべき条件は次の通りです。
 
-* 結果の値が意図した順番に並んでいる
-* 変換前の値のセットと変換後の値のセットが同じである
+* 実行結果が意図した順番に並んでいる
+* 実行前の値のセットと実行後の値のセットが同じである
+
+そこで、メソッドの実装を始める前に、メソッドのシグネチャでこれらの条件を表現してみます。
+
+```c#:Program.cs
+/* 
+ * このプログラムには、架空の機能が含まれます。
+ */
+using System;
+
+namespace SortConsole
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+        }
+
+        // Point: 戻り値に対する高度な制約。
+        static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
+        {
+            // TODO: Implementation.
+            throw new NotImplementedException();
+        }
+    }
+
+    public class TwoValues
+    {
+        public int X { get; private set; }
+        public int Y { get; private set; }
+
+        public TwoValues(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public bool SetEquals(TwoValues v)
+        {
+            return X == v.X ? Y == v.Y
+                : X == v.Y && Y == v.X;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{{{0}, {1}}}", X, Y);
+        }
+    }
+
+    public class OrderedTwoValues : TwoValues
+    {
+        // Point: 引数に対する高度な制約。
+        public OrderedTwoValues(int x, int y)
+            : base(x, y) where x <= y
+        {
+        }
+    }
+}
+```
 
 T.B.D.
 
 #### 作成したサンプル
-[SortConsole](https://github.com/sakapon/Samples-2014/blob/master/VerificationSample/SortConsole/Program.cs) (GitHub)  
-[MathConsole](https://github.com/sakapon/Samples-2014/blob/master/VerificationSample/MathConsole/Program.cs) (GitHub)
+* [SortConsole](https://github.com/sakapon/Samples-2014/blob/master/VerificationSample/SortConsole/Program.cs) (GitHub)
+* [MathConsole](https://github.com/sakapon/Samples-2014/blob/master/VerificationSample/MathConsole/Program.cs) (GitHub)
 
 #### 参照
-[プログラミング Coq](http://www.iij-ii.co.jp/lab/techdoc/coqt/)  
-[証明駆動開発入門](http://www.iij-ii.co.jp/lab/techdoc/coqt/coqt8.html)
+* [形式的検証 - Wikipedia](http://j.mp/e1FGFM)
+* [プログラミング Coq](http://www.iij-ii.co.jp/lab/techdoc/coqt/)
+* [証明駆動開発入門](http://www.iij-ii.co.jp/lab/techdoc/coqt/coqt8.html)
