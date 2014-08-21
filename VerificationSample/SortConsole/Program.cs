@@ -14,7 +14,7 @@ namespace SortConsole
             Console.WriteLine(Sort(new TwoValues(2, 1)));
         }
 
-        // Point: 戻り値に対する高度な制約。
+        // Point: 引数に対する高度な制約。
         static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
         {
             // Point: 変数の大小関係などの高度なコンテキスト。
