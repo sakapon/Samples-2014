@@ -25,7 +25,8 @@ namespace SortConsole
         }
     }
 
-    public class TwoValues
+    // null を代入できない型。
+    public class TwoValues where this != null
     {
         public int X { get; private set; }
         public int Y { get; private set; }
