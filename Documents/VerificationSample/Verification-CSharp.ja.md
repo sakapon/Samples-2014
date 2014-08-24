@@ -13,7 +13,7 @@ C# では、コンパイル時に静的にコードをチェックし、警告�
 
 現時点のコンパイラもそれなりに強力な判断能力を持っているとは思いますが、
 **もし C# のコンパイラがさらに空気を読んで賢くなったら、**
-どのようなプログラミング エクスペリエンスを実現できるのかを考えてみます。
+どのようなプログラミング エクスペリエンスを実現できるのかを考えてみましょう。
 
 実装のお題として「与えられた 2 つの整数を昇順に並べ替えるメソッド」という単純なものを設定し、
 どうすればバグのないプログラミングができるかを考えます。
@@ -37,6 +37,7 @@ namespace SortConsole
     {
         static void Main(string[] args)
         {
+            var sorted = Sort(new TwoValues(2, 1));
         }
 
         // Point: 引数に対する高度な制約。
@@ -47,7 +48,8 @@ namespace SortConsole
         }
     }
 
-    public class TwoValues
+    // null を代入できない型。
+    public class TwoValues where this != null
     {
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -76,7 +78,7 @@ namespace SortConsole
 }
 ```
 
-int[] や List&lt;T&gt; の代わりに、TwoValues クラスを定義して 2 つの整数を表現しています。
+int[] や List&lt;int&gt; の代わりに、TwoValues クラスを定義して 2 つの整数を表現しています。
 TwoValues クラスを継承して、順序を保持する OrderedTwoValues クラスを定義します。
 このコンストラクターにある「`where x <= y`」は、
 静的チェックのレベルで引数が x ≦ y を満たした状態でコンストラクターを呼び出さなければ、
@@ -91,6 +93,32 @@ SetEquals メソッドは [ISet&lt;T&gt;.SetEquals メソッド](http://msdn.mic
 
 これで、メソッドのシグネチャだけで条件 1, 2 を表現できました。
 ということは、コンパイルが成功するように実装するだけで、バグが存在しないことが保証されます。
+(上記の段階では NotImplementedException が発生するため、条件 2 を満たさず、コンパイルはエラーとなります。)
+
+では、いよいよ実装です。といってもこれだけですが。
+
+```c#
+static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
+{
+    // Point: 変数の大小関係などの高度なコンテキスト。
+    return v.X <= v.Y
+        ? new OrderedTwoValues(v.X, v.Y)
+        : new OrderedTwoValues(v.Y, v.X);
+}
+```
+
+`new OrderedTwoValues(v.X, v.Y)` の部分は `v.X <= v.Y` を満たすスコープの中にいるため、大小関係の制約を満たします。
+同様に、`new OrderedTwoValues(v.Y, v.X)` の部分は `v.Y < v.X` を満たすスコープの中にいるため、大小関係の制約を満たします。
+ここで渡す引数を逆にしてしまうと、コンパイル エラーとなります。
+
+また、コンストラクターの引数には `v.X` および `v.Y` を一度ずつ渡しているため、メソッドの引数と戻り値は集合として等しくなります。
+ここで例えば `return new OrderedTwoValues(0, 1)` などとしてしまうと、コンパイル エラーとなります。
+
+具体的な数値を代入しなくても、変数のまま大小関係を保持することで、
+コンパイラがこの程度の判断をすることは十分可能でしょう。
+これは、人間が数学の証明をするときと同じレベルの判断です。
+
+このような手法は形式的検証 (formal verification) と呼ばれ、バグが存在してはならないソフトウェアを作成するときに利用されます。
 
 T.B.D.
 
