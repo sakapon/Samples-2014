@@ -39,7 +39,7 @@ class Program
     // Point: 引数に対する高度な制約。
     static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
     {
-        // TODO: Implementation.
+        // TODO: あとで実装。
         throw new NotImplementedException();
     }
 }
@@ -78,7 +78,7 @@ public class OrderedTwoValues : TwoValues
 int[] や List&lt;int&gt; の代わりに、TwoValues クラスを定義して 2 つの整数を表現しています。
 また、TwoValues クラスを継承して、順序を保持する OrderedTwoValues クラスを定義します。
 このコンストラクターにある「`where x <= y`」は、
-静的チェックのレベルで引数が x ≦ y を満たした状態でコンストラクターを呼び出さなければ、
+静的チェックのレベルで引数が `x <= y` を満たした状態でコンストラクターを呼び出さなければ、
 コンパイルがエラーとなることを意味することにします。
 
 そして、並べ替えを表す Sort メソッドの引数を TwoValues 型、戻り値を OrderedTwoValues 型とします。
@@ -107,7 +107,7 @@ static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
 `new OrderedTwoValues(v.X, v.Y)` の部分は `v.X <= v.Y` を満たすスコープの中にいるため、OrderedTwoValues コンストラクターの制約 `x <= y` を満たすはずです。
 同様に、`new OrderedTwoValues(v.Y, v.X)` の部分は `v.Y < v.X` を満たすスコープの中にいるため、この制約を満たすはずです。
 
-また、OrderedTwoValues コンストラクターの引数には `v.X` および `v.Y` を一度ずつ渡しているため、`Sort(v).SetEquals(v)` を満たします。
+また、OrderedTwoValues コンストラクターの引数には、一方に `v.X` を、他方に `v.Y` を渡しているため、`Sort(v).SetEquals(v)` を満たします。
 ここで例えば `return new OrderedTwoValues(0, 1)` などと実装してしまうと、コンパイル エラーとなります。
 
 人間が数学の証明をするとき、具体的な数値を代入しなくても、変数のまま大小関係を判定します。
