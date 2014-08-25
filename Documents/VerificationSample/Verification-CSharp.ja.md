@@ -25,7 +25,7 @@ C# では、コンパイル時に静的にコードをチェックし、警告�
 
 そこで、メソッドの実装を始める前に、メソッドのシグネチャでこれらの条件を表現してみます。
 
-```c#:Program.cs
+```c#
 /* 
  * このプログラムには、架空の機能が含まれます。
  */
@@ -89,10 +89,10 @@ SetEquals メソッドは [ISet&lt;T&gt;.SetEquals メソッド](http://msdn.mic
 これにより、条件 2 が保証されます。
 
 これで、メソッドのシグネチャだけで条件 1, 2 を表現できました。
-ということは、コンパイルが成功するように実装するだけで、バグが存在しないことが保証されます。
+ということは、コンパイルが成功するように実装するだけで、このメソッドにはバグが存在しないことが保証されます。
 (上記の時点の実装では NotImplementedException が発生するため、条件 2 を満たさず、コンパイルはエラーとなります。)
 
-では、いよいよ実装です。といってもこれだけですが。
+では、いよいよ Sort メソッドの実装です。
 
 ```c#
 static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
@@ -110,13 +110,12 @@ static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
 また、OrderedTwoValues コンストラクターの引数には `v.X` および `v.Y` を一度ずつ渡しているため、`Sort(v).SetEquals(v)` を満たします。
 ここで例えば `return new OrderedTwoValues(0, 1)` などと実装してしまうと、コンパイル エラーとなります。
 
-具体的な数値を代入しなくても、変数のまま大小関係を保持することで、エラーかどうかを判断できます。
-これは、人間が数学の証明をするときと同じレベルの判断です。
-もしコンパイラが少し賢くなれば、この程度のチェックは十分可能でしょう。
+人間が数学の証明をするとき、具体的な数値を代入しなくても、変数のまま大小関係を判定します。
+もしコンパイラがもう少し賢くなれば、この程度の判断は十分可能でしょう。
 
-というわけで、上記の実装により、コンパイルは成功します。
-このような手法は形式的検証 (formal verification) と呼ばれ、バグが存在してはならないソフトウェアを作成するときに利用されます。
-C# においても、Roslyn をベースとしてそのうち形式的検証のできるコンパイラが登場するのではないでしょうか。
+というわけで、上記の実装によりコンパイルは成功し、同時に正しい実装であることが保証されます。
+このような手法は形式的検証 (formal verification) と呼ばれ、バグが存在してはならないソフトウェアを作成するときなどに利用されます。
+C# においても、そのうち Roslyn をベースとして形式的検証のできるコンパイラが登場するのではないでしょうか。
 
 #### 作成したサンプル
 * [SortConsole](https://github.com/sakapon/Samples-2014/blob/master/VerificationSample/SortConsole/Program.cs) (GitHub)
@@ -125,4 +124,4 @@ C# においても、Roslyn をベースとしてそのうち形式的検証の�
 #### 参照
 * [形式的検証 - Wikipedia](http://j.mp/e1FGFM)
 * [プログラミング Coq](http://www.iij-ii.co.jp/lab/techdoc/coqt/)
-* [証明駆動開発入門](http://www.iij-ii.co.jp/lab/techdoc/coqt/coqt8.html)
+  * [証明駆動開発入門](http://www.iij-ii.co.jp/lab/techdoc/coqt/coqt8.html)
