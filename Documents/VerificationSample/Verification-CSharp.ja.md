@@ -36,7 +36,7 @@ class Program
         var sorted = Sort(new TwoValues(2, 1));
     }
 
-    // Point: 引数に対する高度な制約。
+    // (架空の機能) 引数に対する高度な制約。
     static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
     {
         // TODO: あとで実装。
@@ -46,7 +46,7 @@ class Program
 ```
 
 ```c#
-// null を代入できない型。
+// (架空の機能) null を代入できない型。
 public class TwoValues where this != null
 {
     public int X { get; private set; }
@@ -67,7 +67,7 @@ public class TwoValues where this != null
 
 public class OrderedTwoValues : TwoValues
 {
-    // Point: 引数に対する高度な制約。
+    // (架空の機能) 引数に対する高度な制約。
     public OrderedTwoValues(int x, int y)
         : base(x, y) where x <= y
     {
@@ -88,7 +88,7 @@ int[] や List&lt;int&gt; の代わりに、TwoValues クラスを定義して 2
 SetEquals メソッドは [ISet&lt;T&gt;.SetEquals メソッド](http://msdn.microsoft.com/ja-jp/library/dd412096.aspx)と同様、集合として等しいかどうかを判定します。
 これにより、条件 2 が保証されます。
 
-これで、メソッドのシグネチャだけで条件 1, 2 を表現できました。
+このように強力な制約を導入することで、メソッドのシグネチャだけで条件 1, 2 を表現できました。
 ということは、コンパイルが成功するように実装するだけで、このメソッドにはバグが存在しないことが保証されます。
 (上記の時点の実装では NotImplementedException が発生するため、条件 2 を満たさず、コンパイルはエラーとなります。)
 
@@ -97,7 +97,7 @@ SetEquals メソッドは [ISet&lt;T&gt;.SetEquals メソッド](http://msdn.mic
 ```c#
 static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
 {
-    // Point: 変数の大小関係などの高度なコンテキスト。
+    // コンパイルが成功するための実装。
     return v.X <= v.Y
         ? new OrderedTwoValues(v.X, v.Y)
         : new OrderedTwoValues(v.Y, v.X);
@@ -105,16 +105,16 @@ static OrderedTwoValues Sort(TwoValues v) where Sort(v).SetEquals(v)
 ```
 
 `new OrderedTwoValues(v.X, v.Y)` の部分は `v.X <= v.Y` を満たすスコープの中にいるため、OrderedTwoValues コンストラクターの制約 `x <= y` を満たすはずです。
-同様に、`new OrderedTwoValues(v.Y, v.X)` の部分は `v.Y < v.X` を満たすスコープの中にいるため、この制約を満たすはずです。
-
-また、OrderedTwoValues コンストラクターの引数には、一方に `v.X` を、他方に `v.Y` を渡しているため、`Sort(v).SetEquals(v)` を満たします。
-ここで例えば `return new OrderedTwoValues(0, 1)` などと実装してしまうと、コンパイル エラーとなります。
+また、`new OrderedTwoValues(v.Y, v.X)` の部分は `v.Y < v.X` を満たすスコープの中にいるため、この制約を満たすはずです。
 
 人間が数学の証明をするとき、具体的な数値を代入しなくても、変数のまま大小関係を判定します。
 もしコンパイラがもう少し賢くなれば、この程度の判断は十分可能でしょう。
 
+同様に、OrderedTwoValues コンストラクターの引数には、一方に `v.X` を、他方に `v.Y` を渡しているため、`Sort(v).SetEquals(v)` を満たします。
+ここで例えば `return new OrderedTwoValues(0, 1)` などと実装してしまうと、コンパイル エラーとなります。
+
 というわけで、上記の実装によりコンパイルは成功し、同時に正しい実装であることが保証されます。
-このような手法は形式的検証 (formal verification) と呼ばれ、バグが存在してはならないソフトウェアを作成するときなどに利用されます。
+このような手法は[形式的検証 (formal verification)](http://j.mp/e1FGFM) と呼ばれ、バグが存在してはならないソフトウェアを作成するときなどに利用されます。
 C# においても、そのうち Roslyn をベースとして形式的検証のできるコンパイラが登場するのではないでしょうか。
 
 #### 作成したサンプル
