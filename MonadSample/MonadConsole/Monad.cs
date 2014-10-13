@@ -18,6 +18,16 @@ namespace MonadConsole
             Value = value;
         }
 
+        public static explicit operator T(Monad<T> value)
+        {
+            return value.Value;
+        }
+
+        public static implicit operator Monad<T>(T value)
+        {
+            return new Monad<T>(value);
+        }
+
         // Requirement for monad 2: Bind.
         public Monad<TResult> Bind<TResult>(Func<T, Monad<TResult>> func)
         {
@@ -27,16 +37,6 @@ namespace MonadConsole
         public Monad<TResult> Map<TResult>(Func<T, TResult> mapping)
         {
             return mapping(Value);
-        }
-
-        public static explicit operator T(Monad<T> value)
-        {
-            return value.Value;
-        }
-
-        public static implicit operator Monad<T>(T value)
-        {
-            return new Monad<T>(value);
         }
     }
 
