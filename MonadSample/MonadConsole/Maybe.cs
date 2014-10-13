@@ -68,7 +68,7 @@ namespace MonadConsole
         public static Maybe<TResult> SelectMany<T, U, TResult>(this Maybe<T> maybe, Func<T, Maybe<U>> selector, Func<T, U, TResult> resultSelector)
         {
             var selected = maybe.Bind(selector);
-            return maybe.HasValue && selected.HasValue
+            return selected.HasValue
                 ? resultSelector((T)maybe, (U)selected)
                 : Maybe<TResult>.None;
         }
