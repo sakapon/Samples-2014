@@ -34,11 +34,18 @@ namespace MonadConsole
                 where x % 3 == 1
                 select x + 1;
 
-            var r2 =
-                from x in 1.ToMaybe()
-                from y in 2.ToMaybe()
-                where x % 3 == 1
-                select x + y;
+            var r2 = Add(1, 2);
+            var r3 = Add(2, 1);
+            var r4 = Add(1, Maybe<int>.None);
+        }
+
+        static Maybe<int> Add(Maybe<int> x, Maybe<int> y)
+        {
+            return
+                from _x in x
+                from _y in y
+                where _x < _y
+                select _x + _y;
         }
 
         static void FlowTest()
