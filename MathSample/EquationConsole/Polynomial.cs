@@ -17,6 +17,11 @@ namespace EquationConsole
             get { return _coefficients == null ? _coefficients_empty : _coefficients; }
         }
 
+        public int Dimension
+        {
+            get { return Coefficients.Count == 0 ? 0 : Coefficients.Max(d => d.Key); }
+        }
+
         public Polynomial(Dictionary<int, double> coefficients)
         {
             _coefficients = coefficients;
@@ -41,12 +46,41 @@ namespace EquationConsole
 
         public static Polynomial operator *(Polynomial p1, Polynomial p2)
         {
-            throw new NotImplementedException();
+            var coefficients = new Dictionary<int, double>();
+
+            foreach (var item1 in p1.Coefficients)
+            {
+                foreach (var item2 in p2.Coefficients)
+                {
+                    var degree = item1.Key + item2.Key;
+                    var coefficient = item1.Value * item2.Value;
+                    if (coefficients.ContainsKey(degree))
+                    {
+                        coefficient += coefficients[degree];
+                    }
+
+                    if (coefficient != 0)
+                    {
+                        coefficients[degree] = coefficient;
+                    }
+                    else
+                    {
+                        coefficients.Remove(degree);
+                    }
+                }
+            }
+            return new Polynomial(coefficients);
         }
 
         public static Polynomial operator /(Polynomial p, double value)
         {
-            throw new NotImplementedException();
+            var coefficients = new Dictionary<int, double>();
+
+            foreach (var item in p.Coefficients)
+            {
+                coefficients[item.Key] = item.Value / value;
+            }
+            return new Polynomial(coefficients);
         }
 
         public static Polynomial operator +(Polynomial p)
