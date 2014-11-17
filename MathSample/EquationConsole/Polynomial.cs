@@ -40,21 +40,7 @@ namespace EquationConsole
 
             foreach (var item2 in p2.Coefficients)
             {
-                var degree = item2.Key;
-                var coefficient = item2.Value;
-                if (coefficients.ContainsKey(degree))
-                {
-                    coefficient += coefficients[degree];
-                }
-
-                if (coefficient != 0)
-                {
-                    coefficients[degree] = coefficient;
-                }
-                else
-                {
-                    coefficients.Remove(degree);
-                }
+                AddMonomial(coefficients, item2.Key, item2.Value);
             }
             return new Polynomial(coefficients);
         }
@@ -65,21 +51,7 @@ namespace EquationConsole
 
             foreach (var item2 in p2.Coefficients)
             {
-                var degree = item2.Key;
-                var coefficient = -item2.Value;
-                if (coefficients.ContainsKey(degree))
-                {
-                    coefficient += coefficients[degree];
-                }
-
-                if (coefficient != 0)
-                {
-                    coefficients[degree] = coefficient;
-                }
-                else
-                {
-                    coefficients.Remove(degree);
-                }
+                AddMonomial(coefficients, item2.Key, -item2.Value);
             }
             return new Polynomial(coefficients);
         }
@@ -92,21 +64,7 @@ namespace EquationConsole
             {
                 foreach (var item2 in p2.Coefficients)
                 {
-                    var degree = item1.Key + item2.Key;
-                    var coefficient = item1.Value * item2.Value;
-                    if (coefficients.ContainsKey(degree))
-                    {
-                        coefficient += coefficients[degree];
-                    }
-
-                    if (coefficient != 0)
-                    {
-                        coefficients[degree] = coefficient;
-                    }
-                    else
-                    {
-                        coefficients.Remove(degree);
-                    }
+                    AddMonomial(coefficients, item1.Key + item2.Key, item1.Value * item2.Value);
                 }
             }
             return new Polynomial(coefficients);
@@ -118,7 +76,7 @@ namespace EquationConsole
 
             foreach (var item in p.Coefficients)
             {
-                coefficients[item.Key] = item.Value / value;
+                AddMonomial(coefficients, item.Key, item.Value / value);
             }
             return new Polynomial(coefficients);
         }
@@ -131,6 +89,23 @@ namespace EquationConsole
         public static Polynomial operator -(Polynomial p)
         {
             return -1 * p;
+        }
+
+        static void AddMonomial(Dictionary<int, double> coefficients, int degree, double coefficient)
+        {
+            if (coefficients.ContainsKey(degree))
+            {
+                coefficient += coefficients[degree];
+            }
+
+            if (coefficient != 0)
+            {
+                coefficients[degree] = coefficient;
+            }
+            else
+            {
+                coefficients.Remove(degree);
+            }
         }
 
         public ReadOnlyDictionary<int, double> GetCoefficients()
