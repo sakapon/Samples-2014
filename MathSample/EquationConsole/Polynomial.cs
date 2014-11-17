@@ -36,12 +36,52 @@ namespace EquationConsole
 
         public static Polynomial operator +(Polynomial p1, Polynomial p2)
         {
-            throw new NotImplementedException();
+            var coefficients = new Dictionary<int, double>(p1.Coefficients);
+
+            foreach (var item2 in p2.Coefficients)
+            {
+                var degree = item2.Key;
+                var coefficient = item2.Value;
+                if (coefficients.ContainsKey(degree))
+                {
+                    coefficient += coefficients[degree];
+                }
+
+                if (coefficient != 0)
+                {
+                    coefficients[degree] = coefficient;
+                }
+                else
+                {
+                    coefficients.Remove(degree);
+                }
+            }
+            return new Polynomial(coefficients);
         }
 
         public static Polynomial operator -(Polynomial p1, Polynomial p2)
         {
-            throw new NotImplementedException();
+            var coefficients = new Dictionary<int, double>(p1.Coefficients);
+
+            foreach (var item2 in p2.Coefficients)
+            {
+                var degree = item2.Key;
+                var coefficient = -item2.Value;
+                if (coefficients.ContainsKey(degree))
+                {
+                    coefficient += coefficients[degree];
+                }
+
+                if (coefficient != 0)
+                {
+                    coefficients[degree] = coefficient;
+                }
+                else
+                {
+                    coefficients.Remove(degree);
+                }
+            }
+            return new Polynomial(coefficients);
         }
 
         public static Polynomial operator *(Polynomial p1, Polynomial p2)
