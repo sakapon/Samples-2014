@@ -19,7 +19,13 @@ namespace EquationConsole
 
         public int Dimension
         {
-            get { return Coefficients.Count == 0 ? 0 : Coefficients.Max(d => d.Key); }
+            get { return Coefficients.Count == 0 ? 0 : Coefficients.Max(c => c.Key); }
+        }
+
+        // Substitution
+        public double this[double value]
+        {
+            get { return Coefficients.Sum(c => c.Value * Math.Pow(value, c.Key)); }
         }
 
         public Polynomial(Dictionary<int, double> coefficients)
@@ -81,6 +87,19 @@ namespace EquationConsole
             return new Polynomial(coefficients);
         }
 
+        // Power
+        public static Polynomial operator ^(Polynomial p, int power)
+        {
+            if (power < 0) throw new ArgumentOutOfRangeException("power", "The value must be non-negative.");
+
+            Polynomial result = 1;
+            for (var i = 0; i < power; i++)
+            {
+                result *= p;
+            }
+            return result;
+        }
+
         public static Polynomial operator +(Polynomial p)
         {
             return p;
@@ -111,11 +130,6 @@ namespace EquationConsole
         public ReadOnlyDictionary<int, double> GetCoefficients()
         {
             return new ReadOnlyDictionary<int, double>(Coefficients);
-        }
-
-        public double Substitute(double value)
-        {
-            throw new NotImplementedException();
         }
 
         public double SolveEquation(double operand)
