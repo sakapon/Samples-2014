@@ -9,15 +9,15 @@ namespace EquationConsole
     {
         public static readonly Polynomial X = new Polynomial(new Dictionary<int, double> { { 1, 1 } });
 
-        static readonly Dictionary<int, double> _coefficients_empty = new Dictionary<int, double>();
-        Dictionary<int, double> _coefficients;
+        static readonly IDictionary<int, double> _coefficients_empty = new Dictionary<int, double>();
+        IDictionary<int, double> _coefficients;
 
-        Dictionary<int, double> Coefficients
+        IDictionary<int, double> Coefficients
         {
             get { return _coefficients == null ? _coefficients_empty : _coefficients; }
         }
 
-        public int Dimension
+        public int Degree
         {
             get { return Coefficients.Count == 0 ? 0 : Coefficients.Max(c => c.Key); }
         }
@@ -28,7 +28,7 @@ namespace EquationConsole
             get { return Coefficients.Sum(c => c.Value * Math.Pow(value, c.Key)); }
         }
 
-        public Polynomial(Dictionary<int, double> coefficients)
+        public Polynomial(IDictionary<int, double> coefficients)
         {
             _coefficients = coefficients;
         }
