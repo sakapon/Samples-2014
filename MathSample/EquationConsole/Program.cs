@@ -10,24 +10,34 @@ namespace EquationConsole
     {
         static void Main(string[] args)
         {
-            PolynomialTest();
+            LinearEquationTest();
+            QuadraticEquationTest();
         }
 
-        static void PolynomialTest()
+        static void LinearEquationTest()
         {
             var x = Polynomial.X;
 
-            var p1 = x + 2;
-            var p2 = x - 2;
+            Console.WriteLine(x.SolveLinearEquation());
+            Console.WriteLine((x - 2).SolveLinearEquation());
+            Console.WriteLine((2 * x + 1).SolveLinearEquation());
+        }
 
-            var p3 = p1 + p2;
-            var p4 = p1 - p2;
-            var p5 = p1 * p2;
-            var p6 = p1 / 2;
+        static void QuadraticEquationTest()
+        {
+            var x = Polynomial.X;
+            var x2 = x ^ 2;
 
-            Console.WriteLine(((Polynomial)0)[5]);
-            Console.WriteLine(p1[5]);
-            Console.WriteLine(p5[5]);
+            WriteLine((x2 + 1).SolveQuadraticEquation());
+            WriteLine(x2.SolveQuadraticEquation());
+            WriteLine((x2 - 6 * x + 9).SolveQuadraticEquation());
+            WriteLine(((x + 2) * (2 * x - 1)).SolveQuadraticEquation());
+            WriteLine((x2 + x - 1).SolveQuadraticEquation());
+        }
+
+        static void WriteLine<T>(IEnumerable<T> source)
+        {
+            Console.WriteLine(string.Join(", ", source));
         }
     }
 }
