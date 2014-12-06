@@ -15,6 +15,8 @@ namespace EquationConsole
         {
             LinearEquationTest();
             QuadraticEquationTest();
+
+            IntersectionTest();
         }
 
         static void LinearEquationTest()
@@ -36,6 +38,16 @@ namespace EquationConsole
         static void WriteLine<T>(IEnumerable<T> source)
         {
             Console.WriteLine(string.Join(", ", source));
+        }
+
+        static void IntersectionTest()
+        {
+            // 直線 y = x - 1 と直線 y = -2x + 5 の交点。
+            var l1 = x - 1;
+            var l2 = -2 * x + 5;
+            var p_x = (l1 - l2).SolveLinearEquation();
+            var p_y = l1[p_x];
+            Console.WriteLine("({0}, {1})", p_x, p_y);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace EquationConsole
         public static readonly Polynomial X = new Polynomial(new Dictionary<int, double> { { 1, 1 } });
 
         static readonly IDictionary<int, double> _coefficients_empty = new Dictionary<int, double>();
+
         IDictionary<int, double> _coefficients;
 
         IDictionary<int, double> Coefficients
@@ -92,6 +93,7 @@ namespace EquationConsole
             if (power < 0) throw new ArgumentOutOfRangeException("power", "The value must be non-negative.");
 
             Polynomial result = 1;
+
             for (var i = 0; i < power; i++)
             {
                 result *= p;
