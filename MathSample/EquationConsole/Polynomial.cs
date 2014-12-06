@@ -28,6 +28,7 @@ namespace EquationConsole
         }
 
         // The dictionary represents index/coefficient pairs.
+        // The dictionary does not contain entries whose coefficient is 0.
         public Polynomial(IDictionary<int, double> coefficients)
         {
             _coefficients = coefficients;
