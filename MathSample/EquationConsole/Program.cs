@@ -67,6 +67,11 @@ namespace EquationConsole
             // (x - x1) (y2 - y1) - (x2 - x1) (y - y1) = 0
             return y => ((x - p1.X) * (p2.Y - p1.Y) - (p2.X - p1.X) * (y - p1.Y)).SolveLinearEquation();
         }
+
+        static Func<double, double> GetFunc_y_to_x_Old(Point2D p1, Point2D p2)
+        {
+            return y => (p2.X - p1.X) * (y - p1.Y) / (p2.Y - p1.Y) + p1.X;
+        }
     }
 
     struct Point2D
