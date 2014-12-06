@@ -28,6 +28,7 @@ namespace EquationConsole
             get { return Coefficients.Sum(c => c.Value * Math.Pow(value, c.Key)); }
         }
 
+        // The dictionary represents index/coefficient pairs.
         public Polynomial(IDictionary<int, double> coefficients)
         {
             _coefficients = coefficients;
@@ -35,9 +36,7 @@ namespace EquationConsole
 
         public static implicit operator Polynomial(double value)
         {
-            return value == 0
-                ? default(Polynomial)
-                : new Polynomial(new Dictionary<int, double> { { 0, value } });
+            return value == 0 ? default(Polynomial) : new Polynomial(new Dictionary<int, double> { { 0, value } });
         }
 
         public static Polynomial operator +(Polynomial p1, Polynomial p2)
@@ -110,31 +109,54 @@ namespace EquationConsole
             return -1 * p;
         }
 
-        static void AddMonomial(Dictionary<int, double> coefficients, int degree, double coefficient)
+        static void AddMonomial(Dictionary<int, double> coefficients, int index, double coefficient)
         {
-            if (coefficients.ContainsKey(degree))
+            if (coefficients.ContainsKey(index))
             {
-                coefficient += coefficients[degree];
+                coefficient += coefficients[index];
             }
 
             if (coefficient != 0)
             {
-                coefficients[degree] = coefficient;
+                coefficients[index] = coefficient;
             }
             else
             {
-                coefficients.Remove(degree);
+                coefficients.Remove(index);
             }
         }
 
-        public ReadOnlyDictionary<int, double> GetCoefficients()
+        // Solve the equation whose right operand is 0. 
+        public double SolveLinearEquation()
         {
-            return new ReadOnlyDictionary<int, double>(Coefficients);
+            if (Degree != 1) throw new InvalidOperationException("The degree must be 1.");
+
+            // ax + b = 0
+            var a = GetCoefficient(1);
+            var b = GetCoefficient(0);
+
+            return -b / a;
         }
 
-        public double SolveEquation(double operand)
+        // Solve the equation whose right operand is 0. 
+        public double[] SolveQuadraticEquation()
         {
-            throw new NotImplementedException();
+            if (Degree != 2) throw new InvalidOperationException("The degree must be 2.");
+
+            // ax^2 + bx + c = 0
+            var a = GetCoefficient(2);
+            var b = GetCoefficient(1);
+            var c = GetCoefficient(0);
+            var d = b * b - 4 * a * c;
+
+            return d > 0 ? new[] { (-b - Math.Sqrt(d)) / (2 * a), (-b + Math.Sqrt(d)) / (2 * a) }
+                : d == 0 ? new[] { -b / (2 * a) }
+                : new double[0];
+        }
+
+        double GetCoefficient(int index)
+        {
+            return Coefficients.ContainsKey(index) ? Coefficients[index] : 0;
         }
     }
 }
