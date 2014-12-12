@@ -35,9 +35,10 @@ namespace InkGestureWpf
 
             TheCanvas.Gesture += (o, e) =>
             {
-                var results = e.GetGestureRecognitionResults();
-                var result = results.FirstOrDefault(r => r.RecognitionConfidence == RecognitionConfidence.Strong);
-                if (result == null || result.ApplicationGesture == ApplicationGesture.NoGesture) return;
+                var result = e.GetGestureRecognitionResults()
+                    .Where(r => r.ApplicationGesture != ApplicationGesture.NoGesture)
+                    .FirstOrDefault(r => r.RecognitionConfidence == RecognitionConfidence.Strong);
+                if (result == null) return;
 
                 recognizedGestures.Insert(0, result.ApplicationGesture);
             };
