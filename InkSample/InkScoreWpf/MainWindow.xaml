@@ -14,13 +14,13 @@
 					<RowDefinition/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
-				<InkCanvas EditingMode="GestureOnly">
+                <InkCanvas x:Name="GestureCanvas" EditingMode="GestureOnly" Background="{x:Null}" Loaded="GestureCanvas_Loaded" Gesture="GestureCanvas_Gesture">
 					<InkCanvas.DefaultDrawingAttributes>
 						<DrawingAttributes Color="Red" Height="8" Width="8" StylusTip="Ellipse"/>
 					</InkCanvas.DefaultDrawingAttributes>
 				</InkCanvas>
 				<Border Grid.Row="1" BorderBrush="Black" BorderThickness="3" Width="120" Height="120" Margin="0,20,0,30">
-					<TextBlock Text="20" FontFamily="Segoe Script" FontSize="72" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					<TextBlock Text="{Binding ScoreText, Mode=OneWay}" FontFamily="Segoe Script" FontSize="72" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 				</Border>
 			</Grid>
 		</DataTemplate>
