@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:InkScoreWpf"
         x:Class="InkScoreWpf.MainWindow"
-        Title="Ink Scores" Height="800" Width="1200" WindowState="Maximized">
+        Title="Ink Scoring" Height="800" Width="1200" WindowState="Maximized">
 	<Window.Resources>
 		<ItemsPanelTemplate x:Key="QuestionsPanelTemplate">
 			<UniformGrid IsItemsHost="True" Rows="1" />
@@ -11,15 +11,18 @@
 		<DataTemplate x:Key="QuestionDataTemplate">
 			<Grid>
 				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
 					<RowDefinition/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
-                <InkCanvas x:Name="GestureCanvas" EditingMode="GestureOnly" Background="{x:Null}" Loaded="GestureCanvas_Loaded" Gesture="GestureCanvas_Gesture">
+                <TextBlock Text="{Binding Id, Mode=OneWay, StringFormat=(\{0\})}" FontSize="40" HorizontalAlignment="Center" Margin="0,30"/>
+                <Image Grid.Row="1" Source="{Binding ImagePath, Mode=OneWay}"/>
+                <InkCanvas x:Name="GestureCanvas" Grid.Row="1" EditingMode="GestureOnly" Background="{x:Null}" Loaded="GestureCanvas_Loaded" Gesture="GestureCanvas_Gesture">
 					<InkCanvas.DefaultDrawingAttributes>
 						<DrawingAttributes Color="Red" Height="8" Width="8" StylusTip="Ellipse"/>
 					</InkCanvas.DefaultDrawingAttributes>
 				</InkCanvas>
-				<Border Grid.Row="1" BorderBrush="Black" BorderThickness="3" Width="120" Height="120" Margin="0,20,0,30">
+				<Border Grid.Row="2" BorderBrush="Black" BorderThickness="3" Width="150" Height="120" Margin="0,30,0,40">
 					<TextBlock Text="{Binding ScoreText, Mode=OneWay}" FontFamily="Segoe Script" FontSize="72" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 				</Border>
 			</Grid>

@@ -18,7 +18,10 @@ namespace InkScoreWpf
 
         public AppModel()
         {
-            Questions = new ObservableCollection<Question>(Enumerable.Range(0, 5).Select(i => new Question(20)));
+            var questionsQuery = Enumerable.Range(1, 5)
+                .Select(i => new Question(i, 20))
+                .Reverse();
+            Questions = new ObservableCollection<Question>(questionsQuery);
 
             foreach (var question in Questions)
             {
@@ -32,6 +35,8 @@ namespace InkScoreWpf
         public const string Circle = "○";
         public const string Check = "✓";
 
+        public int Id { get; private set; }
+        public string ImagePath { get; private set; }
         public int Point { get; private set; }
 
         public string Sign
@@ -57,8 +62,10 @@ namespace InkScoreWpf
             }
         }
 
-        public Question(int point)
+        public Question(int id, int point)
         {
+            Id = id;
+            ImagePath = string.Format("Images/Q{0}.jpg", id);
             Point = point;
         }
     }
