@@ -1,8 +1,39 @@
-﻿<Window x:Class="InkScoreWpf.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        xmlns:local="clr-namespace:InkScoreWpf"
+        x:Class="InkScoreWpf.MainWindow"
+        Title="Ink Scores" Height="800" Width="1200" WindowState="Maximized">
+	<Window.Resources>
+		<ItemsPanelTemplate x:Key="QuestionsPanelTemplate">
+			<UniformGrid IsItemsHost="True" Rows="1" />
+		</ItemsPanelTemplate>
+		<DataTemplate x:Key="QuestionDataTemplate">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<InkCanvas EditingMode="GestureOnly">
+					<InkCanvas.DefaultDrawingAttributes>
+						<DrawingAttributes Color="Red" Height="8" Width="8" StylusTip="Ellipse"/>
+					</InkCanvas.DefaultDrawingAttributes>
+				</InkCanvas>
+				<Border Grid.Row="1" BorderBrush="Black" BorderThickness="3" Width="120" Height="120" Margin="0,20,0,30">
+					<TextBlock Text="20" FontFamily="Segoe Script" FontSize="72" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				</Border>
+			</Grid>
+		</DataTemplate>
+	</Window.Resources>
+	<Window.DataContext>
+		<local:AppModel/>
+	</Window.DataContext>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="300"/>
+		</Grid.ColumnDefinitions>
+		<ItemsControl ItemsSource="{Binding Questions}" ItemsPanel="{DynamicResource QuestionsPanelTemplate}" ItemTemplate="{DynamicResource QuestionDataTemplate}" Margin="40,0,0,0"/>
+		<TextBlock Grid.Column="1" Text="{Binding TotalScore, Mode=OneWay}" FontFamily="Segoe Script" FontSize="100" Foreground="Red" TextDecorations="Underline" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60"/>
+	</Grid>
 </Window>
