@@ -21,9 +21,16 @@ namespace InkScoreWpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        WavesPlayer wavesPlayer;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            var sounds = new[] { AnswerResult.Correct, AnswerResult.Intermediate, AnswerResult.Incorrect }
+                .ToDictionary(r => r.ToString(), r => string.Format(@"Sounds\{0}.wav", r));
+            wavesPlayer = new WavesPlayer(sounds);
+            wavesPlayer.LoadAsync();
         }
 
         void GestureCanvas_Loaded(object sender, RoutedEventArgs e)
@@ -80,6 +87,8 @@ namespace InkScoreWpf
                 default:
                     throw new InvalidOperationException();
             }
+
+            wavesPlayer.Play(answerResult.ToString());
 
             var gestureCanvas = (InkCanvas)sender;
             var question = (Question)gestureCanvas.DataContext;
