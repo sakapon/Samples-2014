@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:InkScoreWpf"
         x:Class="InkScoreWpf.MainWindow"
-        Title="Ink Scoring" Height="800" Width="1200" WindowState="Maximized">
+        Title="Ink Scoring" Height="800" Width="1200" WindowState="Maximized" WindowStyle="None">
 	<Window.Resources>
+		<SolidColorBrush x:Key="BlackPenBrush" Color="#FF333333"/>
+		<SolidColorBrush x:Key="RedPenBrush" Color="#FFEE2222"/>
 		<ItemsPanelTemplate x:Key="QuestionsPanelTemplate">
 			<UniformGrid IsItemsHost="True" Rows="1" />
 		</ItemsPanelTemplate>
@@ -16,14 +18,16 @@
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
                 <TextBlock Text="{Binding Id, Mode=OneWay, StringFormat=(\{0\})}" FontSize="40" HorizontalAlignment="Center" Margin="0,30"/>
-                <Image Grid.Row="1" Source="{Binding ImagePath, Mode=OneWay}"/>
-                <InkCanvas x:Name="GestureCanvas" Grid.Row="1" EditingMode="GestureOnly" Background="{x:Null}" Loaded="GestureCanvas_Loaded" Gesture="GestureCanvas_Gesture">
+                <InkCanvas x:Name="GestureCanvas" Grid.Row="1" EditingMode="GestureOnly" MinWidth="0" Loaded="GestureCanvas_Loaded" Gesture="GestureCanvas_Gesture">
+                	<InkCanvas.Background>
+                		<ImageBrush ImageSource="{Binding ImagePath, Mode=OneWay}" Stretch="Uniform"/>
+                	</InkCanvas.Background>
 					<InkCanvas.DefaultDrawingAttributes>
-						<DrawingAttributes Color="Red" Height="8" Width="8" StylusTip="Ellipse"/>
+						<DrawingAttributes Color="#FFEE2222" Height="8" Width="8" StylusTip="Ellipse"/>
 					</InkCanvas.DefaultDrawingAttributes>
 				</InkCanvas>
 				<Border Grid.Row="2" BorderBrush="Black" BorderThickness="3" Width="150" Height="120" Margin="0,30,0,40">
-					<TextBlock Text="{Binding Score, Mode=OneWay}" FontFamily="Segoe Script" FontSize="72" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					<TextBlock Text="{Binding Score, Mode=OneWay}" FontFamily="Segoe Script" FontSize="72" Foreground="{DynamicResource RedPenBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 				</Border>
 			</Grid>
 		</DataTemplate>
@@ -37,6 +41,14 @@
 			<ColumnDefinition Width="300"/>
 		</Grid.ColumnDefinitions>
 		<ItemsControl ItemsSource="{Binding Questions}" ItemsPanel="{DynamicResource QuestionsPanelTemplate}" ItemTemplate="{DynamicResource QuestionDataTemplate}" Margin="40,0,0,0"/>
-		<TextBlock Grid.Column="1" Text="{Binding TotalScore, Mode=OneWay}" FontFamily="Segoe Script" FontSize="100" Foreground="Red" TextDecorations="Underline" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60"/>
+		<TextBlock Grid.Column="1" FontFamily="MS PMincho" FontSize="80" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0"><Run Text="コ"/><LineBreak/><Run Text="ク"/><LineBreak/><Run Text="語"/></TextBlock>
+		<TextBlock Grid.Column="1" FontFamily="HGPGyoshotai" FontSize="68" Foreground="{DynamicResource BlackPenBrush}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,210"><Run Text="し"/><LineBreak/><Run Text="め"/><LineBreak/><Run Text="井"/><LineBreak/><LineBreak/><Run Text="な"/><LineBreak/><Run Text="ま"/><LineBreak/><Run Text="恵"/></TextBlock>
+		<TextBlock Grid.Column="1" Text="{Binding TotalScore, Mode=OneWay}" FontFamily="Segoe Script" FontSize="100" Foreground="{DynamicResource RedPenBrush}" TextDecorations="Underline" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50" RenderTransformOrigin="0.5,0.5">
+			<TextBlock.RenderTransform>
+				<TransformGroup>
+					<RotateTransform Angle="-10"/>
+				</TransformGroup>
+			</TextBlock.RenderTransform>
+		</TextBlock>
 	</Grid>
 </Window>
