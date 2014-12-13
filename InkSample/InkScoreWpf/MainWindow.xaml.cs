@@ -34,6 +34,7 @@ namespace InkScoreWpf
             {
                 ApplicationGesture.Circle,
                 ApplicationGesture.DoubleCircle,
+                ApplicationGesture.Triangle,
                 ApplicationGesture.Check,
                 ApplicationGesture.ArrowDown,
                 ApplicationGesture.ChevronDown,
@@ -42,6 +43,8 @@ namespace InkScoreWpf
                 ApplicationGesture.Down,
                 ApplicationGesture.Left,
                 ApplicationGesture.Right,
+                ApplicationGesture.Curlicue,
+                ApplicationGesture.DoubleCurlicue,
             });
         }
 
@@ -52,12 +55,15 @@ namespace InkScoreWpf
                 .FirstOrDefault(r => r.RecognitionConfidence == RecognitionConfidence.Strong);
             if (result == null) return;
 
-            string sign;
+            AnswerResult answerResult;
             switch (result.ApplicationGesture)
             {
                 case ApplicationGesture.Circle:
                 case ApplicationGesture.DoubleCircle:
-                    sign = Question.Circle;
+                    answerResult = AnswerResult.Correct;
+                    break;
+                case ApplicationGesture.Triangle:
+                    answerResult = AnswerResult.Intermediate;
                     break;
                 case ApplicationGesture.Check:
                 case ApplicationGesture.ArrowDown:
@@ -67,7 +73,9 @@ namespace InkScoreWpf
                 case ApplicationGesture.Down:
                 case ApplicationGesture.Left:
                 case ApplicationGesture.Right:
-                    sign = Question.Check;
+                case ApplicationGesture.Curlicue:
+                case ApplicationGesture.DoubleCurlicue:
+                    answerResult = AnswerResult.Incorrect;
                     break;
                 default:
                     throw new InvalidOperationException();
@@ -75,7 +83,7 @@ namespace InkScoreWpf
 
             var gestureCanvas = (InkCanvas)sender;
             var question = (Question)gestureCanvas.DataContext;
-            question.Sign = sign;
+            question.Result = answerResult;
 
             gestureCanvas.Strokes.Clear();
             gestureCanvas.Strokes.Add(e.Strokes);

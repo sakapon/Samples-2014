@@ -23,7 +23,7 @@
 					</InkCanvas.DefaultDrawingAttributes>
 				</InkCanvas>
 				<Border Grid.Row="2" BorderBrush="Black" BorderThickness="3" Width="150" Height="120" Margin="0,30,0,40">
-					<TextBlock Text="{Binding ScoreText, Mode=OneWay}" FontFamily="Segoe Script" FontSize="72" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					<TextBlock Text="{Binding Score, Mode=OneWay}" FontFamily="Segoe Script" FontSize="72" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 				</Border>
 			</Grid>
 		</DataTemplate>
