@@ -27,8 +27,8 @@ namespace InkScoreWpf
         {
             InitializeComponent();
 
-            var sounds = new[] { AnswerResult.Correct, AnswerResult.Intermediate, AnswerResult.Incorrect }
-                .ToDictionary(r => r.ToString(), r => string.Format(@"Sounds\{0}.wav", r));
+            var sounds = Enum.GetNames(typeof(AnswerResult))
+                .ToDictionary(n => n, n => string.Format(@"Sounds\{0}.wav", n));
             wavesPlayer = new WavesPlayer(sounds);
             wavesPlayer.LoadAsync();
         }
@@ -57,13 +57,17 @@ namespace InkScoreWpf
 
         void GestureCanvas_Gesture(object sender, InkCanvasGestureEventArgs e)
         {
-            var result = e.GetGestureRecognitionResults()
-                .Where(r => r.ApplicationGesture != ApplicationGesture.NoGesture)
-                .FirstOrDefault(r => r.RecognitionConfidence == RecognitionConfidence.Strong);
-            if (result == null) return;
+            var gestureResult = e.GetGestureRecognitionResults()
+                .Where(r => r.RecognitionConfidence == RecognitionConfidence.Strong)
+                .FirstOrDefault(r => r.ApplicationGesture != ApplicationGesture.NoGesture);
+            if (gestureResult == null)
+            {
+                wavesPlayer.Play(AnswerResult.None.ToString());
+                return;
+            }
 
             AnswerResult answerResult;
-            switch (result.ApplicationGesture)
+            switch (gestureResult.ApplicationGesture)
             {
                 case ApplicationGesture.Circle:
                 case ApplicationGesture.DoubleCircle:
