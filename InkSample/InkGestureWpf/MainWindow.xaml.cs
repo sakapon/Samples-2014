@@ -26,21 +26,21 @@ namespace InkGestureWpf
         {
             InitializeComponent();
 
-            var recognizedGestures = new ObservableCollection<ApplicationGesture>();
-            RecognizedGesturesBox.ItemsSource = recognizedGestures;
+            var gestureResults = new ObservableCollection<ApplicationGesture>();
+            GestureResultsBox.ItemsSource = gestureResults;
 
             // EditingMode プロパティを GestureOnly に設定するだけで、すべてのジェスチャが有効になります。
-            // ジェスチャを個別に指定したい場合、SetEnabledGestures メソッドを利用します。
-            //TheCanvas.SetEnabledGestures(new[] { ApplicationGesture.Circle, ApplicationGesture.Check });
+            // 有効にするジェスチャを明示的に指定するには、SetEnabledGestures メソッドを利用します。
+            //GestureCanvas.SetEnabledGestures(new[] { ApplicationGesture.Circle, ApplicationGesture.Check });
 
-            TheCanvas.Gesture += (o, e) =>
+            GestureCanvas.Gesture += (o, e) =>
             {
                 var result = e.GetGestureRecognitionResults()
-                    .Where(r => r.ApplicationGesture != ApplicationGesture.NoGesture)
-                    .FirstOrDefault(r => r.RecognitionConfidence == RecognitionConfidence.Strong);
+                    .Where(r => r.RecognitionConfidence == RecognitionConfidence.Strong)
+                    .FirstOrDefault(r => r.ApplicationGesture != ApplicationGesture.NoGesture);
                 if (result == null) return;
 
-                recognizedGestures.Insert(0, result.ApplicationGesture);
+                gestureResults.Insert(0, result.ApplicationGesture);
             };
         }
     }

@@ -25,9 +25,9 @@
 			<ColumnDefinition Width="600"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
-		<ItemsControl x:Name="RecognizedGesturesBox" Margin="48" ItemsPanel="{DynamicResource GesturesPanelTemplate}"/>
+		<ItemsControl x:Name="GestureResultsBox" Margin="48" ItemsPanel="{DynamicResource GesturesPanelTemplate}"/>
 		<Border Grid.Column="1" BorderBrush="#FF999999" BorderThickness="8,0,0,0">
-			<InkCanvas x:Name="TheCanvas" EditingMode="GestureOnly">
+            <InkCanvas x:Name="GestureCanvas" EditingMode="GestureOnly">
 				<InkCanvas.DefaultDrawingAttributes>
 					<DrawingAttributes Color="Black" Height="12" Width="12" StylusTip="Ellipse"/>
 				</InkCanvas.DefaultDrawingAttributes>
