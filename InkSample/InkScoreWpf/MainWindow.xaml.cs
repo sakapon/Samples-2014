@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,8 +58,17 @@ namespace InkScoreWpf
 
         void GestureCanvas_Gesture(object sender, InkCanvasGestureEventArgs e)
         {
+#if DEBUG
+            var debug_resultsQuery = e.GetGestureRecognitionResults()
+                .Where(r => r.ApplicationGesture != ApplicationGesture.NoGesture);
+            foreach (var r in debug_resultsQuery)
+            {
+                Debug.WriteLine("{0}: {1}", r.ApplicationGesture, r.RecognitionConfidence);
+            }
+            Debug.WriteLine("");
+#endif
+            // 信頼性 (RecognitionConfidence) を無視したほうが、Circle と Triangle の認識率は上がるようです。
             var gestureResult = e.GetGestureRecognitionResults()
-                .Where(r => r.RecognitionConfidence == RecognitionConfidence.Strong)
                 .FirstOrDefault(r => r.ApplicationGesture != ApplicationGesture.NoGesture);
             if (gestureResult == null)
             {
