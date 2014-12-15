@@ -36,7 +36,8 @@ namespace InkGestureWpf
             GestureCanvas.Gesture += (o, e) =>
             {
                 var result = e.GetGestureRecognitionResults()
-                    .Where(r => r.RecognitionConfidence == RecognitionConfidence.Strong)
+                    // 信頼性 (RecognitionConfidence) を無視したほうがよさそうです。
+                    //.Where(r => r.RecognitionConfidence == RecognitionConfidence.Strong)
                     .FirstOrDefault(r => r.ApplicationGesture != ApplicationGesture.NoGesture);
                 if (result == null) return;
 
