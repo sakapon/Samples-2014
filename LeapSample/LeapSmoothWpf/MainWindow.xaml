@@ -6,7 +6,7 @@
         Title="MainWindow" Height="350" Width="525" WindowState="Maximized" FontSize="32">
 	<Window.Resources>
 		<DataTemplate x:Key="PositionDataTemplate">
-			<Ellipse Fill="#FFFF9900" Height="33" Width="33" Margin="-16,-16,0,0" RenderTransformOrigin="0.5,0.5">
+			<Ellipse Fill="#FFFF9900" Height="33" Width="33" Margin="-16,-16,0,0" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
 				<Ellipse.RenderTransform>
 					<TransformGroup>
 						<ScaleTransform/>
@@ -25,7 +25,16 @@
 		<local:AppModel/>
 	</Window.DataContext>
 	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
 		<TextBlock HorizontalAlignment="Left" Text="{Binding FrameRate, Mode=OneWay, StringFormat=\{0:N2\} f/s}" VerticalAlignment="Top" Margin="20,20,0,0"/>
-		<ItemsControl ItemsSource="{Binding TipPositions}" ItemTemplate="{DynamicResource PositionDataTemplate}" ItemsPanel="{DynamicResource PositionsPanelTemplate}"/>
+		<Viewbox>
+			<ItemsControl ItemsSource="{Binding TipPositions}" ItemTemplate="{DynamicResource PositionDataTemplate}" ItemsPanel="{DynamicResource PositionsPanelTemplate}" Height="640" Width="1600"/>
+		</Viewbox>
+		<Viewbox Grid.Row="1">
+			<ItemsControl ItemsSource="{Binding StabilizedTipPositions}" ItemTemplate="{DynamicResource PositionDataTemplate}" ItemsPanel="{DynamicResource PositionsPanelTemplate}" Height="640" Width="1600"/>
+		</Viewbox>
 	</Grid>
 </Window>
