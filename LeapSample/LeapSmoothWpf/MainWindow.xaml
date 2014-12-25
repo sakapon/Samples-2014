@@ -6,12 +6,9 @@
         Title="MainWindow" Height="350" Width="525" WindowState="Maximized" FontSize="32">
 	<Window.Resources>
 		<DataTemplate x:Key="PositionDataTemplate">
-			<Ellipse Fill="#FFFF9900" Height="33" Width="33" Margin="-16,-16,0,0" RenderTransformOrigin="0.5,0.5" IsHitTestVisible="False">
+			<Ellipse Style="{DynamicResource PointerEllipseStyle}">
 				<Ellipse.RenderTransform>
 					<TransformGroup>
-						<ScaleTransform/>
-						<SkewTransform/>
-						<RotateTransform/>
 						<TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
 					</TransformGroup>
 				</Ellipse.RenderTransform>
@@ -20,6 +17,18 @@
 		<ItemsPanelTemplate x:Key="PositionsPanelTemplate">
 			<Canvas IsItemsHost="True"/>
 		</ItemsPanelTemplate>
+		<Style x:Key="PositionsStyle" TargetType="{x:Type ItemsControl}">
+			<Setter Property="Width" Value="1600"/>
+			<Setter Property="Height" Value="640"/>
+		</Style>
+		<Style x:Key="PointerEllipseStyle" TargetType="{x:Type Ellipse}">
+			<Setter Property="Fill" Value="#FFFF9900"/>
+			<Setter Property="Width" Value="33"/>
+			<Setter Property="Height" Value="33"/>
+			<Setter Property="Margin" Value="-16,-16,0,0"/>
+			<Setter Property="IsHitTestVisible" Value="False"/>
+			<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+		</Style>
 	</Window.Resources>
 	<Window.DataContext>
 		<local:AppModel/>
@@ -31,10 +40,10 @@
 		</Grid.RowDefinitions>
 		<TextBlock HorizontalAlignment="Left" Text="{Binding FrameRate, Mode=OneWay, StringFormat=\{0:N2\} f/s}" VerticalAlignment="Top" Margin="20,20,0,0"/>
 		<Viewbox>
-			<ItemsControl ItemsSource="{Binding TipPositions}" ItemTemplate="{DynamicResource PositionDataTemplate}" ItemsPanel="{DynamicResource PositionsPanelTemplate}" Height="640" Width="1600"/>
+			<ItemsControl ItemsSource="{Binding TipPositions}" ItemTemplate="{DynamicResource PositionDataTemplate}" ItemsPanel="{DynamicResource PositionsPanelTemplate}" Style="{DynamicResource PositionsStyle}"/>
 		</Viewbox>
 		<Viewbox Grid.Row="1">
-			<ItemsControl ItemsSource="{Binding StabilizedTipPositions}" ItemTemplate="{DynamicResource PositionDataTemplate}" ItemsPanel="{DynamicResource PositionsPanelTemplate}" Height="640" Width="1600"/>
+			<ItemsControl ItemsSource="{Binding StabilizedTipPositions}" ItemTemplate="{DynamicResource PositionDataTemplate}" ItemsPanel="{DynamicResource PositionsPanelTemplate}" Style="{DynamicResource PositionsStyle}"/>
 		</Viewbox>
 	</Grid>
 </Window>
