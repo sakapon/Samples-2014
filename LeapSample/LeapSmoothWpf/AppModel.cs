@@ -13,9 +13,6 @@ namespace LeapSmoothWpf
         const int ScreenHeight = 1080;
         const int MappingScale = 3;
 
-        Controller controller;
-        FrameListener listener;
-
         public double FrameRate
         {
             get { return GetValue<double>(); }
@@ -36,20 +33,18 @@ namespace LeapSmoothWpf
 
         public AppModel()
         {
-            controller = new Controller();
-            listener = new FrameListener();
+            var controller = new Controller();
+            var listener = new FrameListener();
             controller.AddListener(listener);
 
+            AppDomain.CurrentDomain.ProcessExit += (o, e) =>
+            {
+                controller.RemoveListener(listener);
+                listener.Dispose();
+                controller.Dispose();
+            };
+
             listener.FrameArrived += listener_FrameArrived;
-
-            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-        }
-
-        void CurrentDomain_ProcessExit(object sender, EventArgs e)
-        {
-            controller.RemoveListener(listener);
-            listener.Dispose();
-            controller.Dispose();
         }
 
         void listener_FrameArrived(Leap.Frame frame)
