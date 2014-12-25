@@ -3,32 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:LeapSmoothWpf"
         x:Class="LeapSmoothWpf.MainWindow"
-        Title="MainWindow" Height="350" Width="525" WindowState="Maximized" FontSize="32">
+        Title="Leap Smoothing" Height="800" Width="1200" WindowState="Maximized" FontSize="32">
 	<Window.Resources>
+		<Style x:Key="PointerEllipseStyle" TargetType="{x:Type Ellipse}">
+			<Setter Property="Fill" Value="#FFFF9900"/>
+			<Setter Property="Width" Value="45"/>
+			<Setter Property="Height" Value="45"/>
+			<Setter Property="Margin" Value="-22,-22,0,0"/>
+			<Setter Property="IsHitTestVisible" Value="False"/>
+			<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+		</Style>
+		<Style x:Key="PositionsStyle" TargetType="{x:Type ItemsControl}">
+			<Setter Property="Width" Value="1600"/>
+			<Setter Property="Height" Value="640"/>
+		</Style>
 		<DataTemplate x:Key="PositionDataTemplate">
 			<Ellipse Style="{DynamicResource PointerEllipseStyle}">
 				<Ellipse.RenderTransform>
-					<TransformGroup>
-						<TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
-					</TransformGroup>
+					<TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
 				</Ellipse.RenderTransform>
 			</Ellipse>
 		</DataTemplate>
 		<ItemsPanelTemplate x:Key="PositionsPanelTemplate">
 			<Canvas IsItemsHost="True"/>
 		</ItemsPanelTemplate>
-		<Style x:Key="PositionsStyle" TargetType="{x:Type ItemsControl}">
-			<Setter Property="Width" Value="1600"/>
-			<Setter Property="Height" Value="640"/>
-		</Style>
-		<Style x:Key="PointerEllipseStyle" TargetType="{x:Type Ellipse}">
-			<Setter Property="Fill" Value="#FFFF9900"/>
-			<Setter Property="Width" Value="33"/>
-			<Setter Property="Height" Value="33"/>
-			<Setter Property="Margin" Value="-16,-16,0,0"/>
-			<Setter Property="IsHitTestVisible" Value="False"/>
-			<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-		</Style>
 	</Window.Resources>
 	<Window.DataContext>
 		<local:AppModel/>
