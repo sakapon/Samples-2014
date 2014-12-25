@@ -22,7 +22,13 @@ namespace LeapSmoothWpf
             private set { SetValue(value); }
         }
 
-        public Point3D[] Positions
+        public Point3D[] TipPositions
+        {
+            get { return GetValue<Point3D[]>(); }
+            private set { SetValue(value); }
+        }
+
+        public Point3D[] StabilizedTipPositions
         {
             get { return GetValue<Point3D[]>(); }
             private set { SetValue(value); }
@@ -49,7 +55,14 @@ namespace LeapSmoothWpf
         void listener_FrameArrived(Leap.Frame frame)
         {
             FrameRate = frame.CurrentFramesPerSecond;
-            Positions = frame.Pointables
+
+            TipPositions = frame.Pointables
+                .Where(p => p.IsValid)
+                .Where(p => p.TipPosition.IsValid())
+                .Select(p => ToScreenPoint(p.TipPosition))
+                .ToArray();
+
+            StabilizedTipPositions = frame.Pointables
                 .Where(p => p.IsValid)
                 .Where(p => p.StabilizedTipPosition.IsValid())
                 .Select(p => ToScreenPoint(p.StabilizedTipPosition))
