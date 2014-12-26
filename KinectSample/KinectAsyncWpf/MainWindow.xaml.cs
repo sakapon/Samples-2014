@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Kinect;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,64 @@ namespace KinectAsyncWpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        KinectSensor sensor;
+        Skeleton[] skeletons;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            Loaded += MainWindow_Loaded;
+            Closed += MainWindow_Closed;
+        }
+
+        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (KinectSensor.KinectSensors.Count == 0) return;
+
+            sensor = KinectSensor.KinectSensors[0];
+            sensor.SkeletonStream.Enable();
+            sensor.Start();
+            skeletons = new Skeleton[sensor.SkeletonStream.FrameSkeletonArrayLength];
+
+            Task.Run(() => sensor.SkeletonFrameReady += sensor_SkeletonFrameReady);
+        }
+
+        void MainWindow_Closed(object sender, EventArgs e)
+        {
+            if (sensor != null)
+            {
+                sensor.Stop();
+            }
+        }
+
+        void sensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+        {
+            using (var frame = e.OpenSkeletonFrame())
+            {
+                if (frame == null)
+                {
+                    ShowPosition("");
+                    return;
+                }
+
+                frame.CopySkeletonDataTo(skeletons);
+
+                var skeleton = skeletons.FirstOrDefault(s => s.TrackingState == SkeletonTrackingState.Tracked);
+                if (skeleton == null)
+                {
+                    ShowPosition("");
+                    return;
+                }
+
+                var p = skeleton.Position;
+                ShowPosition(string.Format("({0:N3}, {1:N3}, {2:N3})", p.X, p.Y, p.Z));
+            }
+        }
+
+        void ShowPosition(string text)
+        {
+            Dispatcher.Invoke(() => PositionText.Text = text);
         }
     }
 }
