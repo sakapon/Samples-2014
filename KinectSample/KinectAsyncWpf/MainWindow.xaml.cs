@@ -1,6 +1,7 @@
 ﻿using Microsoft.Kinect;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -29,8 +30,8 @@ namespace KinectAsyncWpf
         {
             InitializeComponent();
 
-            Loaded += MainWindow_Loaded;
-            Closed += MainWindow_Closed;
+            Loaded += (o, e) => Task.Run(() => MainWindow_Loaded(o, e));
+            Closed += (o, e) => Task.Run(() => MainWindow_Closed(o, e));
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -57,7 +58,7 @@ namespace KinectAsyncWpf
 
         void sensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
-            Thread.Sleep(15); // 意図的な負荷。
+            Thread.Sleep(200); // 意図的な負荷。
 
             using (var frame = e.OpenSkeletonFrame())
             {
@@ -83,7 +84,14 @@ namespace KinectAsyncWpf
 
         void ShowPosition(string text)
         {
-            PositionText.Text = text;
+            try
+            {
+                Dispatcher.Invoke(() => PositionText.Text = text);
+            }
+            catch (TaskCanceledException ex)
+            {
+                Debug.Write(ex);
+            }
         }
     }
 }
