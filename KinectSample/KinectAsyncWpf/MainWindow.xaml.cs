@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,14 +35,16 @@ namespace KinectAsyncWpf
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Thread.Sleep(2000); // 意図的な負荷。
+
             if (KinectSensor.KinectSensors.Count == 0) return;
 
             sensor = KinectSensor.KinectSensors[0];
             sensor.SkeletonStream.Enable();
             sensor.Start();
-            skeletons = new Skeleton[sensor.SkeletonStream.FrameSkeletonArrayLength];
 
-            Task.Run(() => sensor.SkeletonFrameReady += sensor_SkeletonFrameReady);
+            skeletons = new Skeleton[sensor.SkeletonStream.FrameSkeletonArrayLength];
+            sensor.SkeletonFrameReady += sensor_SkeletonFrameReady;
         }
 
         void MainWindow_Closed(object sender, EventArgs e)
@@ -54,6 +57,8 @@ namespace KinectAsyncWpf
 
         void sensor_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
+            Thread.Sleep(15); // 意図的な負荷。
+
             using (var frame = e.OpenSkeletonFrame())
             {
                 if (frame == null)
@@ -78,7 +83,7 @@ namespace KinectAsyncWpf
 
         void ShowPosition(string text)
         {
-            Dispatcher.Invoke(() => PositionText.Text = text);
+            PositionText.Text = text;
         }
     }
 }
