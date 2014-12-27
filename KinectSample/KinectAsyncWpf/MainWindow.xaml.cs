@@ -31,7 +31,7 @@ namespace KinectAsyncWpf
             InitializeComponent();
 
             Loaded += (o, e) => Task.Run(() => MainWindow_Loaded(o, e));
-            Closed += (o, e) => Task.Run(() => MainWindow_Closed(o, e));
+            Closed += (o, e) => Task.Run(() => MainWindow_Closed(o, e)).Wait();
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -84,14 +84,7 @@ namespace KinectAsyncWpf
 
         void ShowPosition(string text)
         {
-            try
-            {
-                Dispatcher.Invoke(() => PositionText.Text = text);
-            }
-            catch (TaskCanceledException ex)
-            {
-                Debug.Write(ex);
-            }
+            Dispatcher.InvokeAsync(() => PositionText.Text = text);
         }
     }
 }
