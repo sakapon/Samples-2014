@@ -31,7 +31,7 @@ namespace KinectAsyncWpf
             InitializeComponent();
 
             Loaded += (o, e) => Task.Run(() => MainWindow_Loaded(o, e));
-            Closed += (o, e) => Task.Run(() => MainWindow_Closed(o, e)).Wait();
+            Closed += MainWindow_Closed;
         }
 
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
