@@ -8,6 +8,7 @@ Sample programs, mainly used for the blog ([Do Design Space](http://sakapon.word
 * [LINQ のクエリ パターン](http://sakapon.wordpress.com/2014/11/03/linq-query-pattern/)
 * [C# で方程式を解く](http://sakapon.wordpress.com/2014/12/07/equations-csharp/)
 * [スタイラス入力のジェスチャ認識](http://sakapon.wordpress.com/2014/12/13/stylus-gestures/)
+* [Kinect アプリで画面のフリーズを防ぐ](http://sakapon.wordpress.com/2014/12/28/kinect-ui-thread/)
 
 ### Thanks
 #### Sound effects
