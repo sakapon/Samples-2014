@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectAsyncWpf", "KinectAsy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectAsyncWpf2", "KinectAsyncWpf2\KinectAsyncWpf2.csproj", "{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectSmoothWpf", "KinectSmoothWpf\KinectSmoothWpf.csproj", "{4CE73C95-221F-409B-86C0-B966A1727CEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CE73C95-221F-409B-86C0-B966A1727CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CE73C95-221F-409B-86C0-B966A1727CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CE73C95-221F-409B-86C0-B966A1727CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CE73C95-221F-409B-86C0-B966A1727CEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
