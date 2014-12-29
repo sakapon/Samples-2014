@@ -1,7 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceTrackingConsole", "FaceTrackingConsole\FaceTrackingConsole.csproj", "{1BCD1899-75FB-4654-89D7-72C3BA2DF963}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectAsyncWpf", "KinectAsyncWpf\KinectAsyncWpf.csproj", "{4B8E23A7-BB42-444D-A70F-A2EC45D7A92D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectAsyncWpf2", "KinectAsyncWpf2\KinectAsyncWpf2.csproj", "{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +19,14 @@ Global
 		{1BCD1899-75FB-4654-89D7-72C3BA2DF963}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BCD1899-75FB-4654-89D7-72C3BA2DF963}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BCD1899-75FB-4654-89D7-72C3BA2DF963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B8E23A7-BB42-444D-A70F-A2EC45D7A92D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B8E23A7-BB42-444D-A70F-A2EC45D7A92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B8E23A7-BB42-444D-A70F-A2EC45D7A92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B8E23A7-BB42-444D-A70F-A2EC45D7A92D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBDE45CF-9C5E-4179-9684-E9E4CAB658D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
