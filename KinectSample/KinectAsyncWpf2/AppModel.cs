@@ -21,6 +21,8 @@ namespace KinectAsyncWpf2
         {
             kinect = new AsyncKinectManager(sensor =>
             {
+                Thread.Sleep(2000); // 意図的な負荷。
+
                 sensor.SkeletonStream.Enable();
                 sensor.Start();
 

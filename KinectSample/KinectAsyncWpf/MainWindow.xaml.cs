@@ -24,7 +24,6 @@ namespace KinectAsyncWpf
     public partial class MainWindow : Window
     {
         KinectSensor sensor;
-        Skeleton[] skeletons;
 
         public MainWindow()
         {
@@ -44,7 +43,6 @@ namespace KinectAsyncWpf
             sensor.SkeletonStream.Enable();
             sensor.Start();
 
-            skeletons = new Skeleton[sensor.SkeletonStream.FrameSkeletonArrayLength];
             sensor.SkeletonFrameReady += sensor_SkeletonFrameReady;
         }
 
@@ -68,6 +66,7 @@ namespace KinectAsyncWpf
                     return;
                 }
 
+                var skeletons = new Skeleton[frame.SkeletonArrayLength];
                 frame.CopySkeletonDataTo(skeletons);
 
                 var skeleton = skeletons.FirstOrDefault(s => s.TrackingState == SkeletonTrackingState.Tracked);
