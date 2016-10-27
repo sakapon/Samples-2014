@@ -21,6 +21,15 @@ namespace MouseRx2Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Vector? Delta
+        {
+            get { return (Vector?)GetValue(DeltaProperty); }
+            set { SetValue(DeltaProperty, value); }
+        }
+
+        public static readonly DependencyProperty DeltaProperty =
+            DependencyProperty.Register("Delta", typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null));
+
         public IObservable<IObservable<Vector>> MouseDrag { get; }
 
         public MainWindow()
@@ -39,6 +48,8 @@ namespace MouseRx2Wpf
                 .Select(p0 => mouseMove
                     .Select(e => e.GetPosition(this) - p0)
                     .TakeUntil(mouseEnd));
+
+            MouseDrag.Subscribe(d => d.Subscribe(v => Delta = v, () => Delta = null));
         }
     }
 }
