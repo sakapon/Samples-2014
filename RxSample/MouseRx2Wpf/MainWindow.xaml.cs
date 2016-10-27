@@ -21,20 +21,39 @@ namespace MouseRx2Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static readonly DependencyProperty DeltaProperty =
+            DependencyProperty.Register(nameof(Delta), typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null));
+
         public Vector? Delta
         {
             get { return (Vector?)GetValue(DeltaProperty); }
             set { SetValue(DeltaProperty, value); }
         }
 
-        public static readonly DependencyProperty DeltaProperty =
-            DependencyProperty.Register("Delta", typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null));
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register(nameof(Orientation), typeof(string), typeof(MainWindow), new PropertyMetadata(null));
+
+        public string Orientation
+        {
+            get { return (string)GetValue(OrientationProperty); }
+            private set { SetValue(OrientationProperty, value); }
+        }
 
         public IObservable<IObservable<Vector>> MouseDrag { get; }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            var π = Math.PI;
+            var orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
+            var zoneAngleRange = 2 * π / orientationSymbols.Length;
+            Func<Vector, string> ToOrientation = v =>
+            {
+                var angle = 2 * π + Math.Atan2(v.Y, v.X);
+                var zone = (int)Math.Round(angle / zoneAngleRange) % orientationSymbols.Length;
+                return orientationSymbols[zone];
+            };
 
             // Replace events with IObservable objects.
             var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(this, nameof(MouseDown)).Select(e => e.EventArgs);
@@ -49,7 +68,16 @@ namespace MouseRx2Wpf
                     .Select(e => e.GetPosition(this) - p0)
                     .TakeUntil(mouseEnd));
 
-            MouseDrag.Subscribe(d => d.Subscribe(v => Delta = v, () => Delta = null));
+            MouseDrag.Subscribe(d => d.Subscribe(v =>
+            {
+                Delta = v;
+                Orientation = ToOrientation(v);
+            },
+            () =>
+            {
+                Delta = null;
+                Orientation = null;
+            }));
         }
     }
 }

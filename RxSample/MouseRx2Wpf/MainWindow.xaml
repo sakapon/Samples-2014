@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MouseRx2Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="600">
+        Title="Mouse Rx" Height="400" Width="400">
     <Grid>
-        <TextBlock DataContext="{Binding Delta, ElementName=window}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20" FontSize="32">
+        <TextBlock DataContext="{Binding Delta, ElementName=window}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20" FontSize="32">
             <Run Text="{Binding X, StringFormat='(\{0:F0\}\, '}"/>
             <Run Text="{Binding Y, StringFormat=\{0:F0\})}"/>
         </TextBlock>
+        <TextBlock Text="{Binding Orientation, ElementName=window}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="200"/>
     </Grid>
 </Window>
