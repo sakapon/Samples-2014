@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +21,24 @@ namespace MouseRx2Wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        public IObservable<IObservable<Vector>> MouseDrag { get; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            // Replace events with IObservable objects.
+            var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(this, nameof(MouseDown)).Select(e => e.EventArgs);
+            var mouseUp = Observable.FromEventPattern<MouseButtonEventArgs>(this, nameof(MouseUp)).Select(e => e.EventArgs);
+            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(this, nameof(MouseLeave)).Select(e => e.EventArgs);
+            var mouseMove = Observable.FromEventPattern<MouseEventArgs>(this, nameof(MouseMove)).Select(e => e.EventArgs);
+            var mouseEnd = mouseUp.Merge(mouseLeave.Select(e => default(MouseButtonEventArgs)));
+
+            MouseDrag = mouseDown
+                .Select(e => e.GetPosition(this))
+                .Select(p0 => mouseMove
+                    .Select(e => e.GetPosition(this) - p0)
+                    .TakeUntil(mouseEnd));
         }
     }
 }
