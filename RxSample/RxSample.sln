@@ -7,13 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseRxWpf", "MouseRxWpf\Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseOldWpf", "MouseOldWpf\MouseOldWpf.csproj", "{7C46EAA3-D9A8-4BC8-AB4A-28196140316B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0A3A9D7E-0EC6-4FE0-85B7-D60661E9F7FF}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MouseRx2Wpf", "MouseRx2Wpf\MouseRx2Wpf.csproj", "{ADDACCF2-8E7F-4278-83BC-2AED3A383918}"
 EndProject
 Global
