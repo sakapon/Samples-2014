@@ -17,12 +17,12 @@ namespace MouseRx2Wpf
         {
             Target = target;
 
-            // Replace events with IObservable objects.
-            var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(Target, nameof(Target.MouseDown)).Select(e => e.EventArgs);
-            var mouseUp = Observable.FromEventPattern<MouseButtonEventArgs>(Target, nameof(Target.MouseUp)).Select(e => e.EventArgs);
-            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseLeave)).Select(e => e.EventArgs);
+            // Replaces events with IObservable objects.
+            var mouseDown = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseDown)).Select(e => e.EventArgs);
             var mouseMove = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseMove)).Select(e => e.EventArgs);
-            var mouseDownEnd = mouseUp.Merge(mouseLeave.Select(e => default(MouseButtonEventArgs)));
+            var mouseUp = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseUp)).Select(e => e.EventArgs);
+            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseLeave)).Select(e => e.EventArgs);
+            var mouseDownEnd = mouseUp.Merge(mouseLeave);
 
             MouseDrag = mouseDown
                 .Select(e => e.GetPosition(Target))
