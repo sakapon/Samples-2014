@@ -22,7 +22,7 @@ namespace MouseRx2Wpf
     public partial class MainWindow : Window
     {
         public static readonly DependencyProperty DeltaProperty =
-            DependencyProperty.Register(nameof(Delta), typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null, (d, e) => DeltaChanged((MainWindow)d, (Vector?)e.NewValue)));
+            DependencyProperty.Register(nameof(Delta), typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null, (d, e) => DeltaChanged((MainWindow)d)));
 
         public Vector? Delta
         {
@@ -58,9 +58,9 @@ namespace MouseRx2Wpf
             return orientationSymbols[zone];
         }
 
-        static void DeltaChanged(MainWindow window, Vector? delta)
+        static void DeltaChanged(MainWindow window)
         {
-            window.Orientation = delta == null ? null : ToOrientation(delta.Value);
+            window.Orientation = window.Delta == null ? null : ToOrientation(window.Delta.Value);
         }
     }
 }
