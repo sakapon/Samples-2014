@@ -47,6 +47,11 @@ namespace MouseRx2Wpf
             events.MouseDrag.Subscribe(d => d.Subscribe(v => Delta = v, () => Delta = null));
         }
 
+        static void DeltaChanged(MainWindow window)
+        {
+            window.Orientation = window.Delta == null ? null : ToOrientation(window.Delta.Value);
+        }
+
         const double π = Math.PI;
         static readonly string[] orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
         static readonly double zoneAngleRange = 2 * π / orientationSymbols.Length;
@@ -56,11 +61,6 @@ namespace MouseRx2Wpf
             var angle = 2 * π + Math.Atan2(v.Y, v.X);
             var zone = (int)Math.Round(angle / zoneAngleRange) % orientationSymbols.Length;
             return orientationSymbols[zone];
-        }
-
-        static void DeltaChanged(MainWindow window)
-        {
-            window.Orientation = window.Delta == null ? null : ToOrientation(window.Delta.Value);
         }
     }
 }
