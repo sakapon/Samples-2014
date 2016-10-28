@@ -39,8 +39,6 @@ namespace MouseRx2Wpf
             private set { SetValue(OrientationProperty, value); }
         }
 
-        public IObservable<IObservable<Vector>> MouseDrag { get; }
-
         public MainWindow()
         {
             InitializeComponent();
@@ -55,20 +53,8 @@ namespace MouseRx2Wpf
                 return orientationSymbols[zone];
             };
 
-            // Replace events with IObservable objects.
-            var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(this, nameof(MouseDown)).Select(e => e.EventArgs);
-            var mouseUp = Observable.FromEventPattern<MouseButtonEventArgs>(this, nameof(MouseUp)).Select(e => e.EventArgs);
-            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(this, nameof(MouseLeave)).Select(e => e.EventArgs);
-            var mouseMove = Observable.FromEventPattern<MouseEventArgs>(this, nameof(MouseMove)).Select(e => e.EventArgs);
-            var mouseEnd = mouseUp.Merge(mouseLeave.Select(e => default(MouseButtonEventArgs)));
-
-            MouseDrag = mouseDown
-                .Select(e => e.GetPosition(this))
-                .Select(p0 => mouseMove
-                    .Select(e => e.GetPosition(this) - p0)
-                    .TakeUntil(mouseEnd));
-
-            MouseDrag.Subscribe(d => d.Subscribe(v =>
+            var events = new EventsExtension(this);
+            events.MouseDrag.Subscribe(d => d.Subscribe(v =>
             {
                 Delta = v;
                 Orientation = ToOrientation(v);
