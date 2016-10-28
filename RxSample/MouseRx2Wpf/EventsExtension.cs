@@ -27,8 +27,8 @@ namespace MouseRx2Wpf
             MouseDrag = mouseDown
                 .Select(e => e.GetPosition(Target))
                 .Select(p0 => mouseMove
-                    .Select(e => e.GetPosition(Target) - p0)
-                    .TakeUntil(mouseDownEnd));
+                    .TakeUntil(mouseDownEnd)
+                    .Select(e => e.GetPosition(Target) - p0));
         }
     }
 }
