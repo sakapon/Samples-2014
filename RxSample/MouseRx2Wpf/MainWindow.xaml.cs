@@ -22,7 +22,7 @@ namespace MouseRx2Wpf
     public partial class MainWindow : Window
     {
         public static readonly DependencyProperty DeltaProperty =
-            DependencyProperty.Register(nameof(Delta), typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null, (d, e) => DeltaChanged((MainWindow)d)));
+            DependencyProperty.Register(nameof(Delta), typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null, (d, e) => ((MainWindow)d).DeltaChanged()));
 
         public Vector? Delta
         {
@@ -47,9 +47,9 @@ namespace MouseRx2Wpf
             events.MouseDrag.Subscribe(d => d.Subscribe(v => Delta = v, () => Delta = null));
         }
 
-        static void DeltaChanged(MainWindow window)
+        void DeltaChanged()
         {
-            window.Orientation = window.Delta == null ? null : ToOrientation(window.Delta.Value);
+            Orientation = Delta == null ? null : ToOrientation(Delta.Value);
         }
 
         const double π = Math.PI;
