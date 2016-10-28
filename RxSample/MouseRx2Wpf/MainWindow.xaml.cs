@@ -22,7 +22,7 @@ namespace MouseRx2Wpf
     public partial class MainWindow : Window
     {
         public static readonly DependencyProperty DeltaProperty =
-            DependencyProperty.Register(nameof(Delta), typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Delta), typeof(Vector?), typeof(MainWindow), new PropertyMetadata(null, (d, e) => DeltaChanged((MainWindow)d, (Vector?)e.NewValue)));
 
         public Vector? Delta
         {
@@ -43,27 +43,24 @@ namespace MouseRx2Wpf
         {
             InitializeComponent();
 
-            var π = Math.PI;
-            var orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
-            var zoneAngleRange = 2 * π / orientationSymbols.Length;
-            Func<Vector, string> ToOrientation = v =>
-            {
-                var angle = 2 * π + Math.Atan2(v.Y, v.X);
-                var zone = (int)Math.Round(angle / zoneAngleRange) % orientationSymbols.Length;
-                return orientationSymbols[zone];
-            };
-
             var events = new EventsExtension(this);
-            events.MouseDrag.Subscribe(d => d.Subscribe(v =>
-            {
-                Delta = v;
-                Orientation = ToOrientation(v);
-            },
-            () =>
-            {
-                Delta = null;
-                Orientation = null;
-            }));
+            events.MouseDrag.Subscribe(d => d.Subscribe(v => Delta = v, () => Delta = null));
+        }
+
+        const double π = Math.PI;
+        static readonly string[] orientationSymbols = new[] { "→", "↘", "↓", "↙", "←", "↖", "↑", "↗" };
+        static readonly double zoneAngleRange = 2 * π / orientationSymbols.Length;
+
+        static string ToOrientation(Vector v)
+        {
+            var angle = 2 * π + Math.Atan2(v.Y, v.X);
+            var zone = (int)Math.Round(angle / zoneAngleRange) % orientationSymbols.Length;
+            return orientationSymbols[zone];
+        }
+
+        static void DeltaChanged(MainWindow window, Vector? delta)
+        {
+            window.Orientation = delta == null ? null : ToOrientation(delta.Value);
         }
     }
 }
