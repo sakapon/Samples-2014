@@ -49,7 +49,7 @@ namespace MouseRx2Wpf
 
         void DeltaChanged()
         {
-            Orientation = Delta == null ? null : ToOrientation(Delta.Value);
+            Orientation = Delta.IfNotNull(ToOrientation);
         }
 
         const double π = Math.PI;
