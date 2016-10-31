@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MouseRx2Wpf
 {
-    public class EventsExtension
+    public class EventsExtension<TElement> where TElement : UIElement
     {
-        public Control Target { get; }
+        public TElement Target { get; }
         public IObservable<IObservable<Vector>> MouseDrag { get; }
 
-        public EventsExtension(Control target)
+        public EventsExtension(TElement target)
         {
             Target = target;
 
             // Replaces events with IObservable objects.
-            var mouseDown = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseDown)).Select(e => e.EventArgs);
-            var mouseMove = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseMove)).Select(e => e.EventArgs);
-            var mouseUp = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseUp)).Select(e => e.EventArgs);
-            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(Target.MouseLeave)).Select(e => e.EventArgs);
+            var mouseDown = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(UIElement.MouseDown)).Select(e => e.EventArgs);
+            var mouseMove = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(UIElement.MouseMove)).Select(e => e.EventArgs);
+            var mouseUp = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(UIElement.MouseUp)).Select(e => e.EventArgs);
+            var mouseLeave = Observable.FromEventPattern<MouseEventArgs>(Target, nameof(UIElement.MouseLeave)).Select(e => e.EventArgs);
             var mouseDownEnd = mouseUp.Merge(mouseLeave);
 
             MouseDrag = mouseDown

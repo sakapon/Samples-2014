@@ -43,7 +43,7 @@ namespace MouseRx2Wpf
         {
             InitializeComponent();
 
-            var events = new EventsExtension(this);
+            var events = new EventsExtension<Window>(this);
             events.MouseDrag.Subscribe(d => d.Subscribe(v => Delta = v, () => Delta = null));
         }
 
