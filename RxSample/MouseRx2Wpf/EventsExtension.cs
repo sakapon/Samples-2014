@@ -10,7 +10,11 @@ namespace MouseRx2Wpf
     public class EventsExtension<TElement> where TElement : UIElement
     {
         public TElement Target { get; }
+
         public IObservable<IObservable<Vector>> MouseDrag { get; }
+
+        Point MouseDragLastPoint;
+        public IObservable<Vector> MouseDragDelta { get; }
 
         public EventsExtension(TElement target)
         {
@@ -28,6 +32,16 @@ namespace MouseRx2Wpf
                 .Select(p0 => mouseMove
                     .TakeUntil(mouseDownEnd)
                     .Select(e => e.GetPosition(Target) - p0));
+
+            // Reports a change vector from the previous position.
+            MouseDragDelta = mouseDown
+                .Select(e => e.GetPosition(Target))
+                .Do(p => MouseDragLastPoint = p)
+                .SelectMany(p0 => mouseMove
+                    .TakeUntil(mouseDownEnd)
+                    .Select(e => new { p1 = MouseDragLastPoint, p2 = e.GetPosition(Target) })
+                    .Do(_ => MouseDragLastPoint = _.p2)
+                    .Select(_ => _.p2 - _.p1));
         }
     }
 }
