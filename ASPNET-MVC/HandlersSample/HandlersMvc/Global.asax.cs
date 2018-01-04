@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -19,6 +21,29 @@ namespace HandlersMvc
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+        }
+
+        void Application_BeginRequest(object sender, EventArgs e)
+        {
+            if (!Request.IsSecureConnection && !string.Equals(Request.Url.Host, "localhost", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Uri.OriginalString プロパティを使用すると、:80 が追加されてしまうことがあります。
+                var secureUrl = Regex.Replace(Request.Url.AbsoluteUri, @"^\w+(?=://)", Uri.UriSchemeHttps);
+
+                if (PermanentHttps)
+                {
+                    Response.RedirectPermanent(secureUrl, true);
+                }
+                else
+                {
+                    Response.Redirect(secureUrl, true);
+                }
+            }
+        }
+
+        static bool PermanentHttps
+        {
+            get { return Convert.ToBoolean(ConfigurationManager.AppSettings["app:PermanentHttps"]); }
         }
     }
 }
