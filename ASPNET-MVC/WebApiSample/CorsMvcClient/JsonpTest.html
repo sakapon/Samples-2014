@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>JSONP Test</title>
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div>
+        <h1>JSONP Test</h1>
+        <h3>GET /json/uuid</h3>
+        <button id="GetUuidButton">Generate</button>
+        <pre id="GetUuidResult"> </pre>
+        <h3>POST /json/uuid</h3>
+        <button id="PostUuidButton">Generate</button>
+        <pre id="PostUuidResult"> </pre>
+        <button id="PostUuidButton2">Generate 2</button>
+        <pre id="PostUuidResult2"> </pre>
+    </div>
+    <script type="text/javascript">
+        var callbackOnPost;
+
+        $(function () {
+            var domain = "http://localhost:58201";
+
+            $("#GetUuidButton").click(function () {
+                $.getJSON(domain + "/json/uuid?callback=?", function (data) {
+                    $("#GetUuidResult").text(data);
+                });
+            });
+            // 動作しません。
+            // $.post の第 4 引数に "jsonp" を指定すると、GET で送信されます。
+            $("#PostUuidButton").click(function () {
+                $.post(domain + "/json/uuid?callback=?", { count: 3 }, function (data) {
+                    $("#PostUuidResult").text(data);
+                });
+            });
+            // 動作します。
+            $("#PostUuidButton2").click(function () {
+                callbackOnPost = function (data) {
+                    $("#PostUuidResult2").text(data);
+                };
+                $.post(domain + "/json/uuid?callback=callbackOnPost", { count: 3 });
+            });
+        });
+    </script>
+</body>
+</html>
