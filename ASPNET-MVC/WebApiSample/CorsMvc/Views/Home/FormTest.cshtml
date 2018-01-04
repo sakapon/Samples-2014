@@ -1,0 +1,130 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Form Test</title>
+    <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <div>
+        <h1>Form Test</h1>
+        <h3>POST /json/uuid</h3>
+        <button id="PostUuidButton">Generate</button>
+        <pre id="PostUuidResult"> </pre>
+        <form id="UuidForm" action="/" method="post">
+            <p>Count: @Html.TextBox("count", 3)</p>
+        </form>
+        <button id="UuidFormButton">Generate</button>
+        <pre id="UuidFormResult"> </pre>
+        <form id="UuidForm2" action="/json/uuid" method="post">
+            <p>Count: @Html.TextBox("count", 3)</p>
+            <button>Generate</button>
+            <pre id="UuidFormResult2"> </pre>
+        </form>
+    </div>
+    <script type="text/javascript">
+        $.ajaxInvokeByUrlEncoded = function (url, data, method) {
+            /// <summary>
+            ///     URL エンコード形式のデータを送信し、JSON 形式のデータを受信します。
+            /// </summary>
+            /// <param name="url" type="String">送信先の URL。</param>
+            /// <param name="data" type="Object">送信するオブジェクト。</param>
+            /// <param name="method" type="String">HTTP メソッド。既定値は POST。</param>
+            /// <returns type="Object" />
+
+            return $.ajax(url, {
+                type: method ? method : "POST",
+                data: data,
+                dataType: "json"
+            });
+        };
+
+        $.ajaxInvokeByJSON = function (url, data, method) {
+            /// <summary>
+            ///     JSON 形式のデータを送信し、JSON 形式のデータを受信します。
+            /// </summary>
+            /// <param name="url" type="String">送信先の URL。</param>
+            /// <param name="data" type="Object">送信するオブジェクト。</param>
+            /// <param name="method" type="String">HTTP メソッド。既定値は POST。</param>
+            /// <returns type="Object" />
+
+            return $.ajax(url, {
+                type: method ? method : "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            });
+        };
+
+        $.fn.setIsEnabled = function (isEnabled) {
+            /// <summary>
+            ///     要素の状態を、有効または無効に設定します。
+            /// </summary>
+            /// <param name="isEnabled" type="Boolean">要素が有効であるかどうかを示す値。</param>
+            /// <returns type="jQuery" />
+
+            return isEnabled ? this.removeAttr("disabled") : this.attr("disabled", "disabled");
+        };
+
+        // TODO: 改行など。
+        $.fn.formToObject = function () {
+            var form = this[0];
+            var o = {};
+            for (var i = 0; i < form.length; i++) {
+                var e = form[i];
+                if (e.name) {
+                    o[e.name] = e.value;
+                }
+            }
+            return o;
+        };
+
+        $(function () {
+            $("#PostUuidButton").click(function () {
+                $.ajaxInvokeByJSON("/json/uuid", { count: 3 }).done(function (data) {
+                    $("#PostUuidResult").text(data);
+                });
+            });
+            //$("#UuidFormButton").click(function () {
+            //    var data = $("#UuidForm").serialize();
+            //    $.post("/json/uuid", data).done(function (data) {
+            //        $("#UuidFormResult").text(data);
+            //    });
+            //});
+            $("#UuidFormButton").click(function () {
+                var data = $("#UuidForm").formToObject();
+                $.ajaxInvokeByJSON("/json/uuid", data).done(function (data) {
+                    $("#UuidFormResult").text(data);
+                });
+            });
+            $("#UuidForm2").submit(function (e) {
+                e.preventDefault();
+
+                var $form = $(this);
+                var $button = $form.find("button");
+                var data = $form.formToObject();
+
+                $.ajax($form.attr("action"), {
+                    type: $form.attr("method"),
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    timeout: 30000,
+                    beforeSend: function () {
+                        $button.setIsEnabled(false);
+                    }
+                }).done(function (data) {
+                    $("#UuidFormResult2").text(data);
+                }).always(function () {
+                    $button.setIsEnabled(true);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
