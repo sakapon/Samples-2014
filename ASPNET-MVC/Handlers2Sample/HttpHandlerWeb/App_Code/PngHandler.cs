@@ -17,10 +17,10 @@ public class PngHandler : IHttpHandler
 
     public void ProcessRequest(HttpContext context)
     {
-        var w = context.Request.QueryString["w"] ?? "200";
-        var h = context.Request.QueryString["h"] ?? "120";
-        int width = int.Parse(w);
-        int height = int.Parse(h);
+        var w = context.Request.QueryString["w"] ?? "300";
+        var h = context.Request.QueryString["h"] ?? "200";
+        var width = int.Parse(w);
+        var height = int.Parse(h);
 
         var fileName = Path.GetFileNameWithoutExtension(context.Request.Path);
         var color = Regex.IsMatch(fileName, "^[0-9A-Fa-f]{6}$") ? ToColor(fileName) : Color.FromName(fileName);
@@ -47,12 +47,9 @@ public class PngHandler : IHttpHandler
         var bitmap = new Bitmap(width, height);
 
         for (int i = 0; i < bitmap.Width; i++)
-        {
             for (int j = 0; j < bitmap.Height; j++)
-            {
                 bitmap.SetPixel(i, j, color);
-            }
-        }
+
         return bitmap;
     }
 }
